@@ -6,7 +6,6 @@ export default async function handler(req, res) {
     const { message } = req.body;
 
     try {
-        // 1️⃣ Crear un nuevo Thread (hilo)
         const threadResponse = await fetch("https://api.openai.com/v1/threads", {
             method: "POST",
             headers: {
@@ -21,28 +20,20 @@ export default async function handler(req, res) {
             throw new Error(`Error al crear el hilo: ${JSON.stringify(threadData)}`);
         }
 
-        const threadId = threadData.id; // ID del hilo creado
+        const threadId = threadData.id;
 
-        // 2️⃣ Añadir el mensaje del usuario al hilo
-        const messageResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
+        // Agregar el mensaje del usuario
+        await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
                 "Content-Type": "application/json",
                 "OpenAI-Beta": "assistants=v2"
             },
-            body: JSON.stringify({
-                role: "user",
-                content: message
-            })
+            body: JSON.stringify({ role: "user", content: message })
         });
 
-        const messageData = await messageResponse.json();
-        if (!messageResponse.ok) {
-            throw new Error(`Error al añadir mensaje: ${JSON.stringify(messageData)}`);
-        }
-
-        // 3️⃣ Ejecutar el asistente en el hilo
+        // Ejecutar el asistente
         const runResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
             method: "POST",
             headers: {
@@ -50,9 +41,7 @@ export default async function handler(req, res) {
                 "Content-Type": "application/json",
                 "OpenAI-Beta": "assistants=v2"
             },
-            body: JSON.stringify({
-                assistant_id: process.env.OPENAI_ASSISTANT_ID
-            })
+            body: JSON.stringify({ assistant_id: process.env.OPENAI_ASSISTANT_ID })
         });
 
         const runData = await runResponse.json();
@@ -61,9 +50,8 @@ export default async function handler(req, res) {
         }
 
         const runId = runData.id;
-
-        // 4️⃣ Esperar hasta que el asistente genere la respuesta
         let status = "in_progress";
+
         while (status === "in_progress" || status === "queued") {
             await new Promise((resolve) => setTimeout(resolve, 2000)); // Esperar 2 segundos
             const checkRunResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {
@@ -82,7 +70,7 @@ export default async function handler(req, res) {
             status = checkRunData.status;
         }
 
-        // 5️⃣ Obtener la respuesta final del asistente
+        // Obtener respuesta del asistente
         const messagesResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
             method: "GET",
             headers: {
@@ -96,10 +84,11 @@ export default async function handler(req, res) {
             throw new Error(`Error al obtener la respuesta: ${JSON.stringify(messagesData)}`);
         }
 
-        // 🔹 Manejar caso en que no haya respuesta del asistente
+        // 🔹 Manejar si no hay respuesta
         const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
         if (!assistantMessage) {
-            throw new Error("El asistente no devolvió ninguna respuesta.");
+            console.error("⚠️ OpenAI no devolvió ninguna respuesta:", messagesData);
+            return res.status(500).json({ response: "El asistente no proporcionó una respuesta." });
         }
 
         res.status(200).json({ response: assistantMessage.content });
