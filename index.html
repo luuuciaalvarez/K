@@ -119,6 +119,12 @@
     }
 }
 
+document.addEventListener("click", () => {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance("Prueba de voz activada");
+    utterance.lang = "es-ES";
+    synth.speak(utterance);
+}, { once: true }); // Se ejecuta solo una vez
 
 
         function displayResponse(response) {
