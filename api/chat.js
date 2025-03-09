@@ -53,18 +53,18 @@ export default async function handler(req, res) {
 
         // 🔹 3️⃣ Ejecutar el asistente en el hilo
         console.log("🔹 Ejecutando el asistente...");
-        const runResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-                "Content-Type": "application/json",
-                "OpenAI-Beta": "assistants=v2"
-            },
-            body: JSON.stringify({
-                assistant_id: process.env.OPENAI_ASSISTANT_ID,
-                max_tokens: 100 // 🔹 Reducir tamaño de respuesta para mayor rapidez
-            })
-        });
+       const runResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2"
+    },
+    body: JSON.stringify({
+        assistant_id: process.env.OPENAI_ASSISTANT_ID
+    })
+});
+
 
         const runData = await runResponse.json();
         if (!runResponse.ok) {
