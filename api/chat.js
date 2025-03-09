@@ -93,14 +93,14 @@ export default async function handler(req, res) {
 
         const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
         if (!assistantMessage) {
-            console.error("⚠️ OpenAI no devolvió ninguna respuesta:", messagesData);
+            console.error(" OpenAI no devolvió ninguna respuesta:", messagesData);
             return res.status(500).json({ response: "El asistente no proporcionó una respuesta." });
         }
 
         res.status(200).json({ response: assistantMessage.content });
 
     } catch (error) {
-        console.error("❌ Error en la API de OpenAI:", error);
+        console.error("Error en la API de OpenAI:", error);
 
         if (error.name === "AbortError") {
             res.status(504).json({ error: "Tiempo de espera agotado. Inténtalo de nuevo más tarde." });
