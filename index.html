@@ -94,29 +94,17 @@
             }
         }
 
-        async function sendMessage() {
+       async function sendMessage() {
     const inputText = document.getElementById("textInput").value.trim();
     if (!inputText) return;
 
-    const predefinedResponse = predefinedQA[inputText.toLowerCase()];
-    if (predefinedResponse) {
-        displayResponse(predefinedResponse);
-        return;
-    }
-
     try {
-        const apiKey = "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"; // Reemplaza con tu clave real
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        const response = await fetch("/api/chat", {  // Ahora llama al backend en Vercel
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer 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`
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: inputText }],
-                max_tokens: 100
-            })
+            body: JSON.stringify({ message: inputText })
         });
 
         if (!response.ok) {
@@ -124,12 +112,13 @@
         }
 
         const data = await response.json();
-        displayResponse(data.choices[0].message.content);
+        document.getElementById("responseText").innerText = "Respuesta: " + data.choices[0].message.content;
     } catch (error) {
         console.error("Error en la API:", error);
-        displayResponse("No se pudo conectar con la IA.");
+        document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
     }
 }
+
 
 
         function displayResponse(response) {
