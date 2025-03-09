@@ -96,31 +96,37 @@
 }
 
 
-        async function sendMessage() {
-            const inputText = document.getElementById("textInput").value.trim();
-            if (!inputText) return;
+    async function sendMessage() {
+    const inputText = document.getElementById("textInput").value.trim();
+    if (!inputText) return;
 
-            try {
-                const response = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ message: inputText })
-                });
+    try {
+        const response = await fetch("/api/chat", {  
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, // Asegúrate de que esta variable esté configurada en Vercel
+                "OpenAI-Beta": "asistentes=v2"  // Agregar el encabezado beta
+            },
+            body: JSON.stringify({
+                model: "gpt-4-turbo",  // O el modelo que prefieras
+                messages: [{ role: "user", content: inputText }],
+                max_tokens: 100
+            })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const responseText = data.choices[0].message.content;
-                displayResponse(responseText);
-            } catch (error) {
-                console.error("Error en la API:", error);
-                displayResponse("No se pudo conectar con la IA.");
-            }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
         }
+
+        const data = await response.json();
+        const responseText = data.choices[0].message.content;
+        displayResponse(responseText);
+    } catch (error) {
+        console.error("Error en la API:", error);
+        displayResponse("No se pudo conectar con la IA.");
+    }
+}
 
         function displayResponse(response) {
             document.getElementById("responseText").innerText = "Respuesta: " + response;
