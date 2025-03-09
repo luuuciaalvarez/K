@@ -6,14 +6,21 @@ export default async function handler(req, res) {
     const { message } = req.body;
 
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // ⏳ Esperar hasta 30s
+
+        // Crear un nuevo Thread (hilo)
         const threadResponse = await fetch("https://api.openai.com/v1/threads", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
                 "Content-Type": "application/json",
                 "OpenAI-Beta": "assistants=v2"
-            }
+            },
+            signal: controller.signal // 🔹 Permite cancelar la solicitud si se tarda demasiado
         });
+
+        clearTimeout(timeoutId); // ✅ Cancelar el temporizador si la API responde a tiempo
 
         const threadData = await threadResponse.json();
         if (!threadResponse.ok) {
@@ -84,7 +91,6 @@ export default async function handler(req, res) {
             throw new Error(`Error al obtener la respuesta: ${JSON.stringify(messagesData)}`);
         }
 
-        // 🔹 Manejar si no hay respuesta
         const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
         if (!assistantMessage) {
             console.error("⚠️ OpenAI no devolvió ninguna respuesta:", messagesData);
@@ -95,6 +101,11 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error("❌ Error en la API de OpenAI:", error);
-        res.status(500).json({ error: "Error en la solicitud a OpenAI" });
+
+        if (error.name === "AbortError") {
+            res.status(504).json({ error: "Tiempo de espera agotado. Inténtalo de nuevo más tarde." });
+        } else {
+            res.status(500).json({ error: "Error en la solicitud a OpenAI" });
+        }
     }
 }
