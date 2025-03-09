@@ -20,15 +20,7 @@ body {
     width: 500%;
     max-width: 700px;
 }
-.izquierda {
-    width: 60%; /* La imagen izquierda ocupa el 60% del ancho */
-    max-width: 400px; /* Opcional: Máximo tamaño */
-}
 
-.derecha {
-    width: 90%; /* La imagen derecha ocupa el 40% del ancho */
-    max-width: 250px; /* Opcional: Máximo tamaño */
-}
 
 /* Sección de imágenes superiores */
 .top-images {
