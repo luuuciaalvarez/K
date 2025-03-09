@@ -7,15 +7,21 @@ export default async function handler(req, res) {
 
     try {
         console.log("🔹 Creando un nuevo hilo en OpenAI...");
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // ⏳ Esperar hasta 30s antes de cancelar
+
+        // 🔹 1️⃣ Crear un nuevo Thread (hilo)
         const threadResponse = await fetch("https://api.openai.com/v1/threads", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
                 "Content-Type": "application/json",
                 "OpenAI-Beta": "assistants=v2"
-            }
+            },
+            signal: controller.signal // 🔹 Si OpenAI tarda más de 30s, se cancela la solicitud
         });
 
+        clearTimeout(timeoutId); // ✅ Cancelar el timeout si OpenAI responde antes
         const threadData = await threadResponse.json();
         if (!threadResponse.ok) {
             console.error("❌ Error al crear el hilo:", threadData);
@@ -25,6 +31,7 @@ export default async function handler(req, res) {
         const threadId = threadData.id;
         console.log(`✅ Hilo creado con ID: ${threadId}`);
 
+        // 🔹 2️⃣ Agregar el mensaje del usuario al hilo
         console.log("🔹 Añadiendo el mensaje del usuario...");
         const messageResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
             method: "POST",
@@ -44,6 +51,7 @@ export default async function handler(req, res) {
 
         console.log("✅ Mensaje añadido correctamente");
 
+        // 🔹 3️⃣ Ejecutar el asistente en el hilo
         console.log("🔹 Ejecutando el asistente...");
         const runResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
             method: "POST",
@@ -52,7 +60,10 @@ export default async function handler(req, res) {
                 "Content-Type": "application/json",
                 "OpenAI-Beta": "assistants=v2"
             },
-            body: JSON.stringify({ assistant_id: process.env.OPENAI_ASSISTANT_ID })
+            body: JSON.stringify({
+                assistant_id: process.env.OPENAI_ASSISTANT_ID,
+                max_tokens: 100 // 🔹 Reducir tamaño de respuesta para mayor rapidez
+            })
         });
 
         const runData = await runResponse.json();
@@ -64,10 +75,20 @@ export default async function handler(req, res) {
         const runId = runData.id;
         console.log(`✅ Asistente ejecutado con ID: ${runId}`);
 
+        // 🔹 4️⃣ Esperar hasta que el asistente termine la ejecución (máx. 30s)
         console.log("🔹 Esperando la respuesta del asistente...");
         let status = "in_progress";
+        let attempts = 0;
+
         while (status === "in_progress" || status === "queued") {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            if (attempts >= 15) { // 🔹 No esperar más de 30 segundos
+                console.error("⏳ Timeout: OpenAI sigue en progreso");
+                return res.status(504).json({ error: "El asistente está tardando demasiado. Inténtalo de nuevo en unos segundos." });
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 2000)); // 🔹 Esperar 2 segundos antes de preguntar de nuevo
+            attempts++;
+
             const checkRunResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {
                 method: "GET",
                 headers: {
@@ -87,6 +108,7 @@ export default async function handler(req, res) {
 
         console.log("✅ Asistente ha completado la ejecución");
 
+        // 🔹 5️⃣ Obtener la respuesta final del asistente
         console.log("🔹 Obteniendo la respuesta...");
         const messagesResponse = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
             method: "GET",
@@ -102,7 +124,7 @@ export default async function handler(req, res) {
             return res.status(messagesResponse.status).json({ error: messagesData });
         }
 
-        // 🔹 Capturar correctamente la respuesta
+        // 🔹 Capturar correctamente la respuesta del asistente
         const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
         if (!assistantMessage || !assistantMessage.content) {
             console.error("❌ OpenAI no devolvió ninguna respuesta.");
@@ -114,6 +136,11 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error("❌ Error inesperado en la API:", error);
-        res.status(500).json({ error: "Error en la solicitud a OpenAI" });
+
+        if (error.name === "AbortError") {
+            res.status(504).json({ error: "Tiempo de espera agotado. Inténtalo de nuevo más tarde." });
+        } else {
+            res.status(500).json({ error: "Error en la solicitud a OpenAI" });
+        }
     }
 }
