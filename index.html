@@ -86,11 +86,15 @@
             }
         });
 
-        function startRecognition() {
-            if (recognition && permissionGranted) {
-                recognition.start();
-            }
-        }
+      function startRecognition() {
+    if (recognition) {
+        recognition.start();
+        console.log("Reconocimiento de voz activado");
+    } else {
+        alert("Tu navegador no soporta reconocimiento de voz.");
+    }
+}
+
 
         async function sendMessage() {
             const inputText = document.getElementById("textInput").value.trim();
