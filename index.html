@@ -94,7 +94,7 @@ function startRecognition() {
      }
  }
  
-   async function sendMessage() {
+    async function sendMessage() {
             const inputText = document.getElementById("textInput").value.trim();
             if (!inputText) return;
 
@@ -112,9 +112,16 @@ function startRecognition() {
                 const data = await response.json();
                 console.log("🔹 Respuesta de OpenAI:", data);
 
-                let respuestaTexto = data.response;
-                if (typeof respuestaTexto === "object") {
-                    respuestaTexto = respuestaTexto.message || respuestaTexto.content || JSON.stringify(respuestaTexto);
+                let respuestaTexto = "";
+                
+                if (data.response) {
+                    if (typeof data.response === "object") {
+                        respuestaTexto = data.response.message || data.response.content || JSON.stringify(data.response);
+                    } else {
+                        respuestaTexto = data.response;
+                    }
+                } else {
+                    respuestaTexto = "No se recibió una respuesta válida.";
                 }
 
                 document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
