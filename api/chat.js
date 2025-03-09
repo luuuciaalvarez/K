@@ -96,14 +96,16 @@ export default async function handler(req, res) {
             throw new Error(`Error al obtener la respuesta: ${JSON.stringify(messagesData)}`);
         }
 
-        // Encontrar la última respuesta del asistente
+        // 🔹 Manejar caso en que no haya respuesta del asistente
         const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
+        if (!assistantMessage) {
+            throw new Error("El asistente no devolvió ninguna respuesta.");
+        }
 
-        res.status(200).json({ response: assistantMessage?.content || "No se pudo obtener la respuesta del asistente." });
+        res.status(200).json({ response: assistantMessage.content });
 
     } catch (error) {
         console.error("❌ Error en la API de OpenAI:", error);
         res.status(500).json({ error: "Error en la solicitud a OpenAI" });
     }
 }
-
