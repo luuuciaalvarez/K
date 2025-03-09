@@ -103,7 +103,8 @@ function startRecognition() {
                  const response = await fetch("/api/chat", {
                      method: "POST",
                      headers: {
-                         "Content-Type": "application/json"
+                         "Content-Type": "application/json",
+                      "OpenAI-Beta": "asistentes=v2" 
                      },
                      body: JSON.stringify({ message: inputText })
                  });
