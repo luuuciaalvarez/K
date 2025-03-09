@@ -94,32 +94,37 @@ function startRecognition() {
      }
  }
  
-async function sendMessage() {
-    const inputText = document.getElementById("textInput").value.trim();
-    if (!inputText) return;
+   async function sendMessage() {
+            const inputText = document.getElementById("textInput").value.trim();
+            if (!inputText) return;
 
-    try {
-        const response = await fetch("/api/chat", { 
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: inputText })
-        });
+            try {
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: inputText })
+                });
 
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("🔹 Respuesta de OpenAI:", data);
+
+                let respuestaTexto = data.response;
+                if (typeof respuestaTexto === "object") {
+                    respuestaTexto = respuestaTexto.message || respuestaTexto.content || JSON.stringify(respuestaTexto);
+                }
+
+                document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
+                displayResponse(respuestaTexto);
+
+            } catch (error) {
+                console.error("Error en la API:", error);
+                document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
+            }
         }
-
-        const data = await response.json();
-        if (data.response) {
-            document.getElementById("responseText").innerText = "Respuesta: " + response;
-        } else {
-            document.getElementById("responseText").innerText = "No se recibió una respuesta válida.";
-        }
-    } catch (error) {
-        console.error("Error en la API:", error);
-        document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
-    }
-}
 
 
          function displayResponse(response) {
