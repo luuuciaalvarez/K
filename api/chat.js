@@ -1,26 +1,28 @@
-async function sendMessage() {
-    const inputText = document.getElementById("textInput").value.trim();
-    if (!inputText) return;
+export default async function handler(req, res) {
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Método no permitido" });
+    }
+
+    const { message } = req.body;
 
     try {
-        const response = await fetch("/api/chat", {
+        const response = await fetch("https://api.openai.com/v1/threads", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+                "Content-Type": "application/json",
+                "OpenAI-Beta": "assistants=v2"
             },
-            body: JSON.stringify({ message: inputText })
+            body: JSON.stringify({
+                assistant_id: process.env.OPENAI_ASSISTANT_ID,  // ID del asistente
+                messages: [{ role: "user", content: message }]
+            })
         });
 
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
         const data = await response.json();
-        displayResponse(data.choices[0].message.content);
+        res.status(200).json(data);
     } catch (error) {
         console.error("Error en la API:", error);
-        displayResponse("No se pudo conectar con la IA.");
+        res.status(500).json({ error: "Error en la solicitud a OpenAI" });
     }
 }
-
-
