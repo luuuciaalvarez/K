@@ -10,10 +10,11 @@ export default async function handler(req, res) {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "OpenAI-Beta": "asistentes=v2"  // Encabezado beta requerido
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: "gpt-4-turbo",  
                 messages: [{ role: "user", content: message }],
                 max_tokens: 100
             })
@@ -22,8 +23,9 @@ export default async function handler(req, res) {
         const data = await response.json();
         res.status(200).json(data);
     } catch (error) {
-        res.status(500).json({ error: "Error en la solicitud" });
+        res.status(500).json({ error: "Error en la solicitud a OpenAI" });
     }
 }
+
 
 
