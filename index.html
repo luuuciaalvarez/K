@@ -94,34 +94,37 @@ function startRecognition() {
      }
  }
  
- 
-         async function sendMessage() {
-             const inputText = document.getElementById("textInput").value.trim();
-             if (!inputText) return;
- 
-             try {
-                 const response = await fetch("/api/chat", {
-                     method: "POST",
-                     headers: {
-                         "Content-Type": "application/json",
-                      "OpenAI-Beta": "asistentes=v2" 
-                     },
-                     body: JSON.stringify({ message: inputText })
-                 });
- 
-                 if (!response.ok) {
-                     throw new Error(`Error HTTP: ${response.status}`);
-                 }
- 
-                 const data = await response.json();
-                 const responseText = data.choices[0].message.content;
-                 displayResponse(responseText);
-             } catch (error) {
-                 console.error("Error en la API:", error);
-                 displayResponse("No se pudo conectar con la IA.");
-             }
-         }
- 
+ async function sendMessage() {
+    const inputText = document.getElementById("textInput").value.trim();
+    if (!inputText) return;
+
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: inputText })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // 🔹 Manejar si `data.response` no existe
+        if (!data.response) {
+            console.error("⚠️ No se recibió respuesta del asistente:", data);
+            displayResponse("No se pudo obtener una respuesta.");
+            return;
+        }
+
+        displayResponse(data.response);
+    } catch (error) {
+        console.error("Error en la API:", error);
+        displayResponse("No se pudo conectar con la IA.");
+    }
+}
+
          function displayResponse(response) {
              document.getElementById("responseText").innerText = "Respuesta: " + response;
  
