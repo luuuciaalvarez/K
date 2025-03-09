@@ -14,12 +14,17 @@ export default async function handler(req, res) {
                 "OpenAI-Beta": "assistants=v2"
             },
             body: JSON.stringify({
-                assistant_id: process.env.OPENAI_ASSISTANT_ID,  // ID del asistente
+                assistant_id: process.env.OPENAI_ASSISTANT_ID,  // Ahora usa la variable de entorno correcta
                 messages: [{ role: "user", content: message }]
             })
         });
 
         const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(`Error en OpenAI: ${JSON.stringify(data)}`);
+        }
+
         res.status(200).json(data);
     } catch (error) {
         console.error("Error en la API:", error);
