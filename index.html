@@ -132,7 +132,7 @@ function startRecognition() {
             respuestaTexto = "No se recibió una respuesta válida.";
         }
 
-        document.getElementById("responseText").innerText = "Respuesta: " + "Hola,mundo"; 
+        document.getElementById("responseText").innerText = "Respuesta: " + respuesta.texto; 
         displayResponse(respuestaTexto);
 
     } catch (error) {
@@ -143,7 +143,7 @@ function startRecognition() {
 
 
          function displayResponse(response) {
-             document.getElementById("responseText").innerText = "Respuesta: " + response;
+             document.getElementById("responseText").innerText = "Respuesta: " + "Hola,mundo"; //response
  
              const synth = window.speechSynthesis;
              const utterance = new SpeechSynthesisUtterance(response);
