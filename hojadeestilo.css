@@ -36,6 +36,7 @@ body {
     width: 100% !important; /* Ajusta el ancho al contenedor */
     height: 200px !important; /* Fija la altura */
     object-fit: cover !important; /* Recorta para ajustarse bien */
+    margin-top: 50px;
 }
 
 /* Sección de imágenes inferiores */
