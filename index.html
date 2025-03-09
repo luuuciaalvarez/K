@@ -118,13 +118,19 @@
         document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
     }
 }
+function speakResponse(response) {
+    document.getElementById("responseText").innerText = "Respuesta: " + response;
 
-document.addEventListener("click", () => {
     const synth = window.speechSynthesis;
-    const utterance = new SpeechSynthesisUtterance("Prueba de voz activada");
+    synth.cancel(); // Detiene cualquier voz en curso antes de hablar
+
+    const utterance = new SpeechSynthesisUtterance(response);
     utterance.lang = "es-ES";
-    synth.speak(utterance);
-}, { once: true }); // Se ejecuta solo una vez
+
+    setTimeout(() => {
+        synth.speak(utterance);
+    }, 500);
+}
 
 
         function displayResponse(response) {
