@@ -94,44 +94,52 @@ function startRecognition() {
      }
  }
  
-    async function sendMessage() {
-            const inputText = document.getElementById("textInput").value.trim();
-            if (!inputText) return;
+   async function sendMessage() {
+    const inputText = document.getElementById("textInput").value.trim();
+    if (!inputText) return;
 
-            try {
-                const response = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: inputText })
-                });
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: inputText })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log("🔹 Respuesta de OpenAI:", data);
-
-                let respuestaTexto = "";
-                
-                if (data.response) {
-                    if (typeof data.response === "object") {
-                        respuestaTexto = data.response.message || data.response.content || JSON.stringify(data.response);
-                    } else {
-                        respuestaTexto = data.response;
-                    }
-                } else {
-                    respuestaTexto = "No se recibió una respuesta válida.";
-                }
-
-                document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
-                displayResponse(respuestaTexto);
-
-            } catch (error) {
-                console.error("Error en la API:", error);
-                document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
-            }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
         }
+
+        const data = await response.json();
+        console.log("🔹 Respuesta de OpenAI:", data);
+
+        let respuestaTexto = "";
+
+        // Verifica si data.response existe y es un objeto
+        if (data.response) {
+            if (typeof data.response === "object") {
+                // Busca la propiedad que contenga el texto
+                if (data.response.message) {
+                    respuestaTexto = data.response.message;
+                } else if (data.response.content) {
+                    respuestaTexto = data.response.content;
+                } else {
+                    respuestaTexto = JSON.stringify(data.response, null, 2); // Formatea JSON
+                }
+            } else {
+                respuestaTexto = data.response; // Si es string, lo usa directamente
+            }
+        } else {
+            respuestaTexto = "No se recibió una respuesta válida.";
+        }
+
+        document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
+        displayResponse(respuestaTexto);
+
+    } catch (error) {
+        console.error("Error en la API:", error);
+        document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
+    }
+}
 
 
          function displayResponse(response) {
