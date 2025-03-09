@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
     if (req.method !== "POST") {
-        return res.status(405).json({ error: "Método no permitido" });
+        res.status(200).json({ response: assistantMessage.content });
+
     }
 
     const { message } = req.body;
