@@ -26,7 +26,7 @@ body {
 }
 
 .derecha {
-    width: 40%; /* La imagen derecha ocupa el 40% del ancho */
+    width: 70%; /* La imagen derecha ocupa el 40% del ancho */
     max-width: 250px; /* Opcional: Máximo tamaño */
 }
 
