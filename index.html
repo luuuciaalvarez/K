@@ -1,103 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="hojadeestilo.css">   
-    <title>Chat con Voz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asistente de Voz</title>
+  <style>
+    /* Estilos básicos para mejorar la visualización */
+    body { font-family: sans-serif; margin: 2em; }
+    #output { margin-top: 1em; padding: 1em; border: 1px solid #ccc; border-radius: 5px; }
+    .user-input { font-weight: bold; }
+    .assistant-response { margin-bottom: 1em; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-images">
-            <img src="img/logo nuevo.PNG" alt="Asistente IA" width="20%">
-            <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image">
-        </div>
+  <!-- Campo de entrada de texto y botón de envío -->
+  <form id="chatForm">
+    <input type="text" id="inputMessage" placeholder="Escribe tu mensaje..." required />
+    <button type="submit">Enviar</button>
+    <button type="button" id="voiceBtn">🎤 Hablar</button>
+  </form>
 
-        <input type="text" id="textInput" placeholder="Pregunta algo...">
-        <button onclick="startRecognition()">🎙 Hablar</button>
-        <button onclick="sendMessage()">📩 Enviar</button>
+  <!-- Contenedor para mostrar la conversación -->
+  <div id="output"></div>
 
-        <p class="response" id="responseText"></p>
+  <script>
+    // Compatibilidad con SpeechRecognition (reconocimiento de voz)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = "es-ES";            // idioma español (ajustar según necesidad)
+      recognition.continuous = false;        // solo una frase a la vez
+      recognition.interimResults = false;    // no mostrar resultados intermedios
+      // Evento que se dispara cuando hay resultados de voz
+      recognition.onresult = (event) => {
+        const transcrito = event.results[0][0].transcript;
+        document.getElementById('inputMessage').value = transcrito;
+        sendMessage();  // envía automáticamente el mensaje transcrito
+      };
+    } else {
+      // Si el navegador no soporta SpeechRecognition
+      document.getElementById('voiceBtn').disabled = true;
+      document.getElementById('voiceBtn').title = "Reconocimiento de voz no soportado en este navegador.";
+    }
 
-        <div class="bottom-images">
-            <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" width="90%">
-            <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen">
-        </div>
-    </div>
+    // Manejar clic en el botón de voz
+    document.getElementById('voiceBtn').addEventListener('click', () => {
+      if (recognition) {
+        recognition.start();
+      }
+    });
 
-    <script>
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-        let permissionGranted = false;
+    // Manejar envío del formulario de chat
+    document.getElementById('chatForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // evita recarga de la página
+      sendMessage();
+    });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (recognition) {
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = "es-ES";
+    // Función para enviar el mensaje a la API y obtener respuesta
+    function sendMessage() {
+      const mensaje = document.getElementById('inputMessage').value.trim();
+      if (!mensaje) return;  // no enviar si está vacío
 
-                recognition.onresult = (event) => {
-                    document.getElementById("textInput").value = event.results[0][0].transcript;
-                };
+      // Opcional: mostrar el mensaje del usuario en la conversación
+      agregarAlOutput(mensaje, 'user-input');
 
-                recognition.onerror = () => {
-                    alert("Error con el reconocimiento de voz. Inténtalo de nuevo.");
-                };
-
-                recognition.onend = () => {
-                    permissionGranted = true;
-                };
+      // Llamada a la API (POST del mensaje)
+      fetch('URL_DE_LA_API', {  // Reemplazar con la URL real de la API
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: mensaje })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Asegurar que data.response sea texto
+        let responseText = data.response;
+        if (typeof responseText !== 'string') {
+          // Si es un objeto, intentar obtener texto o convertir a cadena
+          try {
+            // Si tiene una propiedad 'message' o 'content', usarla
+            if (responseText.message) {
+              responseText = responseText.message;
+            } else if (responseText.content) {
+              responseText = responseText.content;
             } else {
-                alert("Tu navegador no soporta reconocimiento de voz.");
+              // Si no, convertir todo el objeto a JSON string
+              responseText = JSON.stringify(responseText);
             }
-        });
-
-        function startRecognition() {
-            if (recognition) {
-                recognition.start();
-                console.log("🔊 Reconocimiento de voz activado");
-            } else {
-                alert("Tu navegador no soporta reconocimiento de voz.");
-            }
+          } catch(e) {
+            responseText = String(responseText);
+          }
         }
+        // Mostrar y leer la respuesta
+        displayResponse(responseText);
+      })
+      .catch(error => {
+        console.error("Error en la solicitud a la API:", error);
+      });
+    }
 
-        async function sendMessage() {
-            const inputText = document.getElementById("textInput").value.trim();
-            if (!inputText) return;
+    // Función para mostrar la respuesta en la página y convertirla a voz
+    function displayResponse(text) {
+      if (!text) return;
+      // Mostrar la respuesta en el contenedor de salida
+      agregarAlOutput(text, 'assistant-response');
+      // Reproducir la respuesta en voz alta (si la síntesis está disponible)
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "es-ES";  // idioma español para la voz (ajustar si es necesario)
+        window.speechSynthesis.speak(utterance);
+      }
+    }
 
-            try {
-                const response = await fetch("/api/chat", { 
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: inputText })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                // 📌 Asegurar que `data.response` es un texto
-                let respuestaTexto = typeof data.response === "object" ? JSON.stringify(data.response) : data.response;
-
-                document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
-
-                // 📌 Ahora se lee la respuesta en voz alta
-                displayResponse(respuestaTexto);
-
-            } catch (error) {
-                console.error("Error en la API:", error);
-                document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
-            }
-        }
-
-        function displayResponse(response) {
-            const synth = window.speechSynthesis;
-            const utterance = new SpeechSynthesisUtterance(response);
-            utterance.lang = "es-ES";
-            synth.speak(utterance);
-        }
-    </script>
+    // Función auxiliar para agregar texto al div de salida con formato
+    function agregarAlOutput(texto, clase) {
+      const outputDiv = document.getElementById('output');
+      const paragraph = document.createElement('p');
+      paragraph.textContent = texto;
+      paragraph.className = clase;
+      outputDiv.appendChild(paragraph);
+    }
+  </script>
 </body>
 </html>
