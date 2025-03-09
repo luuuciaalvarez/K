@@ -111,7 +111,7 @@ async function sendMessage() {
 
         const data = await response.json();
         if (data.response) {
-            document.getElementById("responseText").innerText = "Respuesta: " + "Hola,Mundo";
+            document.getElementById("responseText").innerText = "Respuesta: " + response;
         } else {
             document.getElementById("responseText").innerText = "No se recibió una respuesta válida.";
         }
