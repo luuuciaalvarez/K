@@ -32,6 +32,11 @@ body {
     width: 100%;
     border-radius: 10px;
 }
+.mi-imagen {
+    width: 100%; /* Ajusta el ancho al contenedor */
+    height: 200px; /* Fija la altura */
+    object-fit: cover; /* Recorta para ajustarse bien */
+}
 
 /* Sección de imágenes inferiores */
 .bottom-images {
