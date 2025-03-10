@@ -13,49 +13,48 @@ body {
 /* Contenedor principal */
 .container {
     background: rgb(255, 255, 255);
-    padding: 20px; /* Reducido para móviles */
+    padding: 250px;
     border-radius: 10px;
     box-shadow: 0px 50px 100px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 90%; /* Ajuste responsivo */
+    width: 500%;
     max-width: 700px;
 }
+
 
 /* Sección de imágenes superiores */
 .top-images {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Asegura que las imágenes se ajusten */
 }
 
 .top-image {
     width: 30%;
     border-radius: 10px;
 }
-
 .mi-imagen {
-    width: 100% !important;
-    height: 200px !important;
-    object-fit: cover !important;
-    margin-top: 20px; /* Reducido para móviles */
+    width: 100% !important; /* Ajusta el ancho al contenedor */
+    height: 200px !important; /* Fija la altura */
+    object-fit: cover !important; /* Recorta para ajustarse bien */
+    margin-top: 100px;
 }
 
 /* Sección de imágenes inferiores */
 .bottom-images {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px; /* Espaciado entre imágenes */
+    margin-right: 20px;
 }
 
 .bottom-image {
-    width: 45%; /* Ajuste para móviles */
+    width: 50%;
     border-radius: 10px;
+    margin-right: 20px;
 }
 
 /* Input de texto */
 input[type="text"] {
-    width: 100%; /* Uso completo del contenedor */
+    width: 80%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -90,27 +89,4 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
     background: #e9ecef;
-}
-
-/* Media queries para pantallas pequeñas */
-@media (max-width: 768px) {
-    .container {
-        width: 95%;
-        padding: 15px;
-    }
-    .top-image {
-        width: 45%;
-    }
-    .bottom-image {
-        width: 80%;
-    }
-    button {
-        width: 100%;
-    }
-}
-
-    .bottom-image {
-        width: 100%; /* Ajusta el ancho al 100% en móviles */
-        margin-bottom: 10px; /* Añade un margen inferior entre las imágenes */
-    }
 }
