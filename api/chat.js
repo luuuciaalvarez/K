@@ -133,6 +133,9 @@ export default async function handler(req, res) {
             responseText = JSON.stringify(assistantMessage.content, null, 2);
         }
 
+        // 🔹 Eliminar referencias a documentos (ejemplo: 【4:0†preguntarespuestas.txt】)
+        responseText = responseText.replace(/【\d+:\d+†[^】]+】/g, "").trim();
+
         console.log("✅ Respuesta recibida:", responseText);
         res.status(200).json({ response: responseText });
 
