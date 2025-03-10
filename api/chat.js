@@ -107,41 +107,30 @@ export default async function handler(req, res) {
               console.error("❌ Error al obtener la respuesta:", messagesData);
               return res.status(messagesResponse.status).json({ error: messagesData });
           }
- // 🔹 Capturar correctamente la respuesta del asistente
+ 
+          // 🔹 Capturar correctamente la respuesta del asistente
 const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
-
-if (!assistantMessage || !assistantMessage.content) {
-    console.error("❌ OpenAI no devolvió ninguna respuesta.");
-    return res.status(500).send("El asistente no proporcionó una respuesta válida.");
-}
-
-// 🔹 Extraer solo el texto de la respuesta
-let responseText = "";
-
-// Si `content` es un array, recorrerlo y extraer los valores de texto
-if (Array.isArray(assistantMessage.content)) {
-    responseText = assistantMessage.content
-        .map((item) => (typeof item === "object" && item.text?.value ? item.text.value : ""))
-        .filter((text) => text !== "") // Filtrar valores vacíos
-        .join("\n");
-} 
-// Si `content` es un objeto con `text.value`
-else if (typeof assistantMessage.content === "object" && assistantMessage.content.text?.value) {
-    responseText = assistantMessage.content.text.value;
-} 
-// Si `content` es directamente un string
-else if (typeof assistantMessage.content === "string") {
-    responseText = assistantMessage.content;
-} 
-// Si no se pudo extraer la respuesta
-else {
-    console.error("❌ No se pudo procesar la respuesta:", assistantMessage.content);
-    return res.status(500).send("Error al interpretar la respuesta del asistente.");
-}
-
-console.log("✅ Respuesta limpia:", responseText);
-res.status(200).send(responseText);
-
+ 
+ if (!assistantMessage || !assistantMessage.content) {
+     console.error("❌ OpenAI no devolvió ninguna respuesta.");
+     return res.status(500).json({ response: "El asistente no proporcionó una respuesta válida." });
+ }
+ 
+ // 🔹 Manejo seguro de la respuesta del asistente
+ let responseText = "";
+ 
+ if (typeof assistantMessage.content === "string") {
+     responseText = assistantMessage.content;
+ } else if (Array.isArray(assistantMessage.content)) {
+     responseText = assistantMessage.content.map((item) =>
+         typeof item === "string" ? item : JSON.stringify(item, null, 2)
+     ).join("\n");
+ } else if (typeof assistantMessage.content === "object") {
+     responseText = JSON.stringify(assistantMessage.content, null, 2);
+ }
+ 
+ console.log("✅ Respuesta recibida:", responseText);
+ res.status(200).json({ response: responseText });
  
       } catch (error) {
           console.error("❌ Error inesperado en la API:", error);
