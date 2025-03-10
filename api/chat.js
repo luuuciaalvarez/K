@@ -109,19 +109,28 @@ export default async function handler(req, res) {
          }
  
          // 🔹 Capturar correctamente la respuesta del asistente
-         const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
- 
-         if (!assistantMessage || !assistantMessage.content) {
-             console.error("❌ OpenAI no devolvió ninguna respuesta.");
-             return res.status(500).json({ response: "El asistente no proporcionó una respuesta válida." });
-         }
-  // 🔹 Si `assistantMessage.content` es un objeto, convertirlo en string
-         const responseText = typeof assistantMessage.content === 'object' 
-             ? JSON.stringify(assistantMessage.content) 
-             : assistantMessage.content;
- 
-         console.log("✅ Respuesta recibida:", responseText);
-         res.status(200).json({ response: responseText });
+const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
+
+if (!assistantMessage || !assistantMessage.content) {
+    console.error("❌ OpenAI no devolvió ninguna respuesta.");
+    return res.status(500).json({ response: "El asistente no proporcionó una respuesta válida." });
+}
+
+// 🔹 Manejo seguro de la respuesta del asistente
+let responseText = "";
+
+if (typeof assistantMessage.content === "string") {
+    responseText = assistantMessage.content;
+} else if (Array.isArray(assistantMessage.content)) {
+    responseText = assistantMessage.content.map((item) =>
+        typeof item === "string" ? item : JSON.stringify(item, null, 2)
+    ).join("\n");
+} else if (typeof assistantMessage.content === "object") {
+    responseText = JSON.stringify(assistantMessage.content, null, 2);
+}
+
+console.log("✅ Respuesta recibida:", responseText);
+res.status(200).json({ response: responseText });
  
      } catch (error) {
          console.error("❌ Error inesperado en la API:", error);
