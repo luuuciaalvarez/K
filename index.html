@@ -142,7 +142,7 @@ function startRecognition() {
 }
 
          function displayResponse(response) {
-             document.getElementById("responseText").innerText = "Respuesta: " + "Hola,mundo"; //response
+             document.getElementById("responseText").innerText = "Respuesta: " + response; //response
  
              const synth = window.speechSynthesis;
              const utterance = new SpeechSynthesisUtterance(response);
