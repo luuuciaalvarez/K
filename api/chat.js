@@ -108,29 +108,34 @@ export default async function handler(req, res) {
              return res.status(messagesResponse.status).json({ error: messagesData });
          }
  
-         // 🔹 Capturar correctamente la respuesta del asistente
+       // 🔹 Capturar correctamente la respuesta del asistente
 const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
 
 if (!assistantMessage || !assistantMessage.content) {
     console.error("❌ OpenAI no devolvió ninguna respuesta.");
-    return res.status(500).json({ response: "El asistente no proporcionó una respuesta válida." });
+    return res.status(500).send("El asistente no proporcionó una respuesta válida.");
 }
 
 // 🔹 Manejo seguro de la respuesta del asistente
 let responseText = "";
 
-if (typeof assistantMessage.content === "string") {
+// Si la respuesta es un array, la procesamos adecuadamente
+if (Array.isArray(assistantMessage.content)) {
+    responseText = assistantMessage.content
+        .map((item) => (typeof item === "object" && item.text?.value ? item.text.value : JSON.stringify(item)))
+        .join("\n");
+} else if (typeof assistantMessage.content === "object" && assistantMessage.content.text?.value) {
+    responseText = assistantMessage.content.text.value;
+} else if (typeof assistantMessage.content === "string") {
     responseText = assistantMessage.content;
-} else if (Array.isArray(assistantMessage.content)) {
-    responseText = assistantMessage.content.map((item) =>
-        typeof item === "string" ? item : JSON.stringify(item, null, 2)
-    ).join("\n");
-} else if (typeof assistantMessage.content === "object") {
-    responseText = JSON.stringify(assistantMessage.content, null, 2);
+} else {
+    console.error("❌ No se pudo procesar la respuesta:", assistantMessage.content);
+    return res.status(500).send("Error al interpretar la respuesta del asistente.");
 }
 
 console.log("✅ Respuesta recibida:", responseText);
 res.status(200).send(responseText);
+
  
      } catch (error) {
          console.error("❌ Error inesperado en la API:", error);
