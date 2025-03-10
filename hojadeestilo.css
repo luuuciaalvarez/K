@@ -21,17 +21,19 @@ body {
     max-width: 700px;
 }
 
-
 /* Sección de imágenes superiores */
 .top-images {
     display: flex;
     justify-content: center;
+    flex-direction: row; /* Asegura que las imágenes estén en fila */
 }
 
 .top-image {
     width: 30%;
     border-radius: 10px;
+    margin-right: 10px; /* Añade un margen entre las imágenes */
 }
+
 .mi-imagen {
     width: 100% !important; /* Ajusta el ancho al contenedor */
     height: 200px !important; /* Fija la altura */
@@ -43,6 +45,7 @@ body {
 .bottom-images {
     display: flex;
     justify-content: center;
+    flex-direction: row; /* Asegura que las imágenes estén en fila */
     margin-right: 20px;
 }
 
