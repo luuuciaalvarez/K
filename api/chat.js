@@ -116,9 +116,9 @@ export default async function handler(req, res) {
             return res.status(500).json({ response: "El asistente no proporcionó una respuesta válida." });
         }
 
-        // 🔹 Si `assistantMessage.content` es un array, convertirlo en string
-        const responseText = Array.isArray(assistantMessage.content) 
-            ? assistantMessage.content.map(c => c.text).join(" ") 
+        // 🔹 Si `assistantMessage.content` es un objeto, convertirlo en string
+        const responseText = typeof assistantMessage.content === 'object' 
+            ? JSON.stringify(assistantMessage.content) 
             : assistantMessage.content;
 
         console.log("✅ Respuesta recibida:", responseText);
