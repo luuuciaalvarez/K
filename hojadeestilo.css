@@ -49,7 +49,7 @@ body {
 /* Sección de imágenes inferiores */
 .bottom-images {
     display: flex;
-    justify-content: flex-end; /* Alinea las imágenes a la derecha */
+    justify-content: space-between; /* Distribuye el espacio entre las imágenes */
     align-items: flex-end; /* Alinea las imágenes en la parte inferior */
     margin-top: 20px;
 }
