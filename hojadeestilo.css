@@ -13,11 +13,11 @@ body {
 /* Contenedor principal */
 .container {
     background: rgb(255, 255, 255);
-    padding: 250px;
+    padding: 50px; /* Reduce el padding para evitar que las imágenes se desplacen */
     border-radius: 10px;
     box-shadow: 0px 50px 100px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 500%;
+    width: 100%; /* Ajusta el ancho al contenedor */
     max-width: 700px;
 }
 
@@ -38,7 +38,7 @@ body {
     width: 100% !important; /* Ajusta el ancho al contenedor */
     height: 200px !important; /* Fija la altura */
     object-fit: cover !important; /* Recorta para ajustarse bien */
-    margin-top: 100px;
+    margin-top: 20px; /* Ajusta el margen superior */
 }
 
 /* Sección de imágenes inferiores */
@@ -92,4 +92,3 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
     background: #e9ecef;
-}
