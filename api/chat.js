@@ -109,6 +109,7 @@ export default async function handler(req, res) {
         }
 
        // 🔹 Capturar correctamente la respuesta del asistente
+// 🔹 Capturar correctamente la respuesta del asistente
 const assistantMessage = messagesData.data.find((msg) => msg.role === "assistant");
 
 if (!assistantMessage || !assistantMessage.content) {
@@ -123,16 +124,11 @@ if (typeof assistantMessage.content === "string") {
     responseText = assistantMessage.content;
 } else if (Array.isArray(assistantMessage.content)) {
     responseText = assistantMessage.content.map((item) => 
-        typeof item === "string" ? item : JSON.stringify(item)
+        typeof item === "string" ? item : JSON.stringify(item, null, 2)
     ).join("\n");
 } else if (typeof assistantMessage.content === "object") {
-    responseText = JSON.stringify(assistantMessage.content, null, 2);
+    responseText = JSON.stringify(assistantMessage.content, null, 2); // 🔹 Convierte a JSON legible
 }
 
-console.log("
-
-    } catch (error) {
-        console.error("❌ Error inesperado en la API:", error);
-        res.status(500).json({ error: "Error en la solicitud a OpenAI" });
-    }
-}
+console.log("✅ Respuesta recibida:", responseText);
+res.status(200).json({ response: responseText });
