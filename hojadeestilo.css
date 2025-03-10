@@ -90,3 +90,26 @@ button:hover {
     border-radius: 5px;
     background: #e9ecef;
 }
+
+/* Media Queries para móviles */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .top-image {
+        width: 100%; /* Ajusta el ancho al 100% para móviles */
+    }
+
+    .mi-imagen {
+        height: 120px !important; /* Reduce la altura para móviles */
+    }
+
+    .bottom-image {
+        width: 100%; /* Ajusta el ancho al 100% para móviles */
+        margin: 5px 0; /* Ajusta el margen para móviles */
+    }
+
+    .response {
+        font-size: 18px; /* Ajusta el tamaño de la fuente para móviles */
+    }
