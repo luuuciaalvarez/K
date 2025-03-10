@@ -26,7 +26,7 @@ body {
 .top-images {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap; /* Permite que las imágenes se ajusten en varias líneas si es necesario */
+    align-items: flex-end; /* Alinea las imágenes en la parte inferior */
 }
 
 .top-image {
@@ -35,9 +35,13 @@ body {
     margin-bottom: 10px; /* Añade un margen inferior entre las imágenes */
 }
 
+.top-image:first-child {
+    width: 40%; /* Hace la primera imagen más alargada */
+}
+
 .mi-imagen {
     width: 100% !important; /* Ajusta el ancho al contenedor */
-    height: 150px !important; /* Fija la altura */
+    height: auto !important; /* Ajusta la altura automáticamente */
     object-fit: cover !important; /* Recorta para ajustarse bien */
     border-radius: 10px;
 }
@@ -45,8 +49,8 @@ body {
 /* Sección de imágenes inferiores */
 .bottom-images {
     display: flex;
-    justify-content: space-between; /* Distribuye el espacio entre las imágenes */
-    align-items: center; /* Alinea las imágenes verticalmente */
+    justify-content: flex-end; /* Alinea las imágenes a la derecha */
+    align-items: flex-end; /* Alinea las imágenes en la parte inferior */
     margin-top: 20px;
 }
 
@@ -106,7 +110,7 @@ button:hover {
     }
 
     .mi-imagen {
-        height: 120px !important; /* Reduce la altura de las imágenes en móviles */
+        height: auto !important; /* Ajusta la altura automáticamente en móviles */
     }
 
     .bottom-images {
