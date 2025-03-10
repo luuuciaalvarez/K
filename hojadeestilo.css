@@ -45,15 +45,14 @@ body {
 /* Sección de imágenes inferiores */
 .bottom-images {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap; /* Permite que las imágenes se ajusten en varias líneas si es necesario */
+    justify-content: space-between; /* Distribuye el espacio entre las imágenes */
+    align-items: center; /* Alinea las imágenes verticalmente */
     margin-top: 20px;
 }
 
 .bottom-image {
     width: 48%; /* Ajusta el ancho para que quepan dos imágenes por fila */
     border-radius: 10px;
-    margin-bottom: 10px; /* Añade un margen inferior entre las imágenes */
 }
 
 /* Input de texto */
@@ -108,5 +107,14 @@ button:hover {
 
     .mi-imagen {
         height: 120px !important; /* Reduce la altura de las imágenes en móviles */
+    }
+
+    .bottom-images {
+        flex-direction: column; /* Cambia a una columna en móviles */
+    }
+
+    .bottom-image {
+        width: 100%; /* Ajusta el ancho al 100% en móviles */
+        margin-bottom: 10px; /* Añade un margen inferior entre las imágenes */
     }
 }
