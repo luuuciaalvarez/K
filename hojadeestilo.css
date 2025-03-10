@@ -36,6 +36,7 @@ body {
 .top-images {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /*movil*/
 }
 
 .top-image {
@@ -53,6 +54,7 @@ body {
 .bottom-images {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Ajuste para móviles */
     margin-right: 20px;
 }
 
@@ -101,20 +103,16 @@ button:hover {
     background: #e9ecef;
 }
 
-/* Media queries para pantallas pequeñas */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
     .container {
         width: 95%;
-        padding: 15px;
+        padding: 20px; /* Más compacto en móviles */
     }
-    .top-image {
-        width: 60%;
-    }
-    .bottom-image {
-        width: 80%;
+    .top-image, .bottom-image {
+        width: 80%; /* Imágenes más grandes en móviles */
     }
     button {
-        width: 100%;
+        width: 100%; /* Botones ocupan el ancho completo */
     }
 }
 
