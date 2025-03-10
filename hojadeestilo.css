@@ -102,13 +102,13 @@ button:hover {
 }
 
 /* Media queries para pantallas pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .container {
         width: 95%;
         padding: 15px;
     }
     .top-image {
-        width: 45%;
+        width: 60%;
     }
     .bottom-image {
         width: 80%;
