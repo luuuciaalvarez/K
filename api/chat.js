@@ -130,7 +130,7 @@ if (typeof assistantMessage.content === "string") {
 }
 
 console.log("✅ Respuesta recibida:", responseText);
-res.status(200).json({ response: responseText });
+res.status(200).send(responseText);
  
      } catch (error) {
          console.error("❌ Error inesperado en la API:", error);
