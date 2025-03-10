@@ -7,52 +7,53 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 /* Contenedor principal */
 .container {
     background: rgb(255, 255, 255);
-    padding: 50px; /* Reduce el padding para evitar que las imágenes se desplacen */
+    padding: 20px; /* Reduce el padding para evitar que las imágenes se desplacen */
     border-radius: 10px;
     box-shadow: 0px 50px 100px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 100%; /* Ajusta el ancho al contenedor */
+    width: 90%; /* Ajusta el ancho al contenedor */
     max-width: 700px;
+    margin: 20px auto; /* Centra el contenedor */
 }
 
 /* Sección de imágenes superiores */
 .top-images {
     display: flex;
-    justify-content: center;
-    flex-direction: row; /* Asegura que las imágenes estén en fila */
+    justify-content: space-between;
+    flex-wrap: wrap; /* Permite que las imágenes se ajusten en varias líneas si es necesario */
 }
 
 .top-image {
     width: 30%;
     border-radius: 10px;
-    margin-right: 10px; /* Añade un margen entre las imágenes */
+    margin-bottom: 10px; /* Añade un margen inferior entre las imágenes */
 }
 
 .mi-imagen {
     width: 100% !important; /* Ajusta el ancho al contenedor */
-    height: 200px !important; /* Fija la altura */
+    height: 150px !important; /* Fija la altura */
     object-fit: cover !important; /* Recorta para ajustarse bien */
-    margin-top: 20px; /* Ajusta el margen superior */
+    border-radius: 10px;
 }
 
 /* Sección de imágenes inferiores */
 .bottom-images {
     display: flex;
-    justify-content: center;
-    flex-direction: row; /* Asegura que las imágenes estén en fila */
-    margin-right: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Permite que las imágenes se ajusten en varias líneas si es necesario */
+    margin-top: 20px;
 }
 
 .bottom-image {
-    width: 50%;
+    width: 48%; /* Ajusta el ancho para que quepan dos imágenes por fila */
     border-radius: 10px;
-    margin-right: 20px;
+    margin-bottom: 10px; /* Añade un margen inferior entre las imágenes */
 }
 
 /* Input de texto */
@@ -92,3 +93,20 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
     background: #e9ecef;
+}
+
+/* Media queries para hacer la página responsive */
+@media (max-width: 768px) {
+    .top-image, .bottom-image {
+        width: 100%; /* Ajusta el ancho al 100% en dispositivos móviles */
+        margin-right: 0; /* Elimina el margen derecho */
+    }
+
+    .container {
+        padding: 15px; /* Reduce el padding en dispositivos móviles */
+    }
+
+    .mi-imagen {
+        height: 120px !important; /* Reduce la altura de las imágenes en móviles */
+    }
+}
