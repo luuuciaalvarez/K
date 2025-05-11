@@ -1,119 +1,124 @@
 <!DOCTYPE html>
- <html lang="es">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="hojadeestilo.css">   
-     <title>Chat con Voz</title>
- </head>
- <body>
-     <div class="container">
-         <!-- Sección de imágenes superiores -->
-         <div class="top-images">
-             <img src="img/logo nuevo.PNG" alt="Asistente IA" width="20%">
-             <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image">
-         </div>
- 
-         <!-- Input y botones -->
-         <input type="text" id="textInput" placeholder="Pregunta algo...">
-         <button onclick="startRecognition()">🎙 Hablar</button>
-         <button onclick="sendMessage()">📩 Enviar</button>
- 
-         <!-- Respuesta -->
-         <p class="response" id="responseText"></p>
- 
-         <!-- Sección de imágenes inferiores -->
-         <div class="bottom-images">
-             <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" width="90%">
-             <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen">
-         </div>
-     </div>
-         <footer>
-             <p>
-            &copy; 2025 Aranzadi La Ley. Todos los derechos reservados. |
-            <a href="https://www.aranzadilaley.es/aviso-legal-ia.html" target="_blank" rel="noopener noreferrer">
-                Aviso Legal
-            </a>
-            </p>
-         </footer>
-     <script>
-         const predefinedQA = {
-             "cómo te llamas": "K",
- "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico en general, incluyendo temas como: Legislación y normativa, Procedimientos legales, Contratos y acuerdos...",
- "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio con información fiable y actualizada. Puedo responder preguntas relacionadas con el mundo legal y jurídico en general, incluyendo temas civiles, penales, administrativos",
- "cómo son tus respuestas": "Las respuestas que proporciono en el ámbito legal y jurídico son exhaustivas y precisas, basadas en la legislación aplicable y en la información proporcionada en los documentos de contexto. Siempre menciono la ley y los artículos relacionados con la respuesta, integrándolos en el texto de manera coherente. Además, incluyo referencias a los documentos legales específicos utilizados, identificándolos con sus nombres en el formato correspondiente. Las respuestas están diseñadas para ser asertivas y evitar expresiones que manifiesten inseguridad o duda. No proporciono documentación específica como modelos de cartas, contratos, convenios, denuncias, demandas, querellas o recursos. Tampoco ofrezco información sobre temas claramente ajenos al mundo legal o jurídico",
- "eres 100% fiable": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio con información fiable y actualizada",
- "qué preguntas puedo hacer": "Dentro del ámbito legal y jurídico, puedes formular preguntas relacionadas con temas legales",
- "qué eres": "módulo de IA generativa que te aporta precisión, agilidad y seguridad",
- "dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
- "de dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
- "cómo estás entrenado": "con contenidos jurídicos actualizados y sólo te ofreceré información cuando realmente haya garantía de fiabilidad.",
- "háblame de tus funcionalidades": "asistente legal k+, análisis de documentos, sintesis de documentos, traducción de documentos",
- "a cuántos idiomas traduces": "a 9 idiomas",
- "cómo evolucionas": "K+ va más allá de un mero conjunto de funcionalidades para convertirse en una solución en constante evolución que irá incorporando progresivamente nuevos casos y funcionalidades",
- "cómo ahorras tiempo": "ahorro tiempo en cada consulta con las respuestas precisas del asistente de Inteligencia Artificial generativa. Respuestas rápidas y precisas, sin textos ni conceptos innecesarios.",
- "cómo es tu empresa": "Somos un proveedor LegalTech que aplica rigurosamente la IA generativa para ayudar a los profesionales jurídicos a trabajar de forma más eficiente, contribuyendo a transformar de una manera decisiva la forma de operar de los profesionales jurídicos.",
- "qué es k Plus": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad.",
- "qué es kaplus": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad.",
- "qué es K+": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad.",
- "dónde se aplica y en qué se basa": "En las soluciones de información jurídica más completas del mercado con aplicación, en algún caso, sobre los contenidos propios del usuario lo cual permite trasladar el valor y la tecnología de Aranzadi LA LEY a la información del profesional,siempre con las garantías de seguridad de plataforma y de cumplimiento en materia de protección de datos de carácter personal. ",
- "cuál es la base tecnológica de K Plus": "K+ aúna la potencia de Azure OpenAI con el entrenamiento y el desarrollo propios del Grupo Karnov y Aranzadi LA LEY lo que permite aplicar las capacidades base de la IA generativa en un entorno controlado para que los resultados se ajusten, tomando como punto de partida la información más amplia y fiable del mercado y siempre actualizada. Dicho de otro modo, utilizamos la potencia de Azure OpenAI pero en un tenant propietario que, a efectos de seguridad y confidencialidad, permite que las respuestas operen únicamente desde nuestro repositorio de información actualizada. ",
- "cuál es la base tecnológica de ka Plus": "K+ aúna la potencia de Azure OpenAI con el entrenamiento y el desarrollo propios del Grupo Karnov y Aranzadi LA LEY lo que permite aplicar las capacidades base de la IA generativa en un entorno controlado para que los resultados se ajusten, tomando como punto de partida la información más amplia y fiable del mercado y siempre actualizada. Dicho de otro modo, utilizamos la potencia de Azure OpenAI pero en un tenant propietario que, a efectos de seguridad y confidencialidad, permite que las respuestas operen únicamente desde nuestro repositorio de información actualizada. ",
- "cuál es la base tecnológica de K+": "K+ aúna la potencia de Azure OpenAI con el entrenamiento y el desarrollo propios del Grupo Karnov y Aranzadi LA LEY lo que permite aplicar las capacidades base de la IA generativa en un entorno controlado para que los resultados se ajusten, tomando como punto de partida la información más amplia y fiable del mercado y siempre actualizada. Dicho de otro modo, utilizamos la potencia de Azure OpenAI pero en un tenant propietario que, a efectos de seguridad y confidencialidad, permite que las respuestas operen únicamente desde nuestro repositorio de información actualizada. ",
- "eres seguro": "El componente utiliza nuestro sistema de autenticación y autorización para garantizar la seguridad durante todo el flujo de uso con encriptación de toda la información  en tránsito y los correspondientes controles de acceso.  ",
- "cuáles son nuestros elementos diferenciadores": "Base legal más exacta posible, Conversación, Identificación de citas en la respuesta, Aplicación de las capacidades de traducción",
- "hola k": "Hola",
- "Hola K": "Hola"
- 
-         };
- 
-     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-         const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-         let permissionGranted = false;
- 
-         document.addEventListener('DOMContentLoaded', () => {
-             if (recognition) {
-                 recognition.continuous = false;
-                 recognition.interimResults = false;
-                 recognition.lang = "es-ES";
- 
-                 recognition.onresult = (event) => {
-                     document.getElementById("textInput").value = event.results[0][0].transcript;
-                 };
- 
-                 recognition.onerror = () => {
-                     alert("Error con el reconocimiento de voz. Inténtalo de nuevo.");
-                 };
- 
-                 recognition.onend = () => {
-                     permissionGranted = true;
-                 };
-             } else {
-                 alert("Tu navegador no soporta reconocimiento de voz.");
-             }
-         });
-function startRecognition() {
-     if (recognition) {
-         recognition.start();
-         console.log("Reconocimiento de voz activado");
-     } else {
-         alert("Tu navegador no soporta reconocimiento de voz.");
-     }
- }
- 
-   async function sendMessage() {
-    const inputText = document.getElementById("textInput").value.trim();
-    if (!inputText) return;
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="hojadeestilo.css">
+  <title>Chat con Voz</title>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="container">
+      <!-- Sección de imágenes superiores -->
+      <div class="top-images">
+        <img src="img/logo nuevo.PNG" alt="Asistente IA" width="20%">
+        <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image">
+      </div>
 
-    try {
+      <!-- Input y botones -->
+      <input type="text" id="textInput" placeholder="Pregunta algo...">
+      <button onclick="startRecognition()">🎙 Hablar</button>
+      <button onclick="sendMessage()">📩 Enviar</button>
+
+      <!-- Respuesta -->
+      <p class="response" id="responseText"></p>
+
+      <!-- Sección de imágenes inferiores -->
+      <div class="bottom-images">
+        <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" width="90%">
+        <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen">
+      </div>
+    </div>
+
+    <!-- Footer al final de la página -->
+    <footer>
+      <p>
+        &copy; 2025 Aranzadi La Ley. Todos los derechos reservados. |
+        <a href="https://www.aranzadilaley.es/aviso-legal-ia.html" target="_blank" rel="noopener noreferrer">
+          Aviso Legal
+        </a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    const predefinedQA = {
+      "cómo te llamas": "K",
+      "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico en general...",
+      "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
+      "cómo son tus respuestas": "Las respuestas que proporciono en el ámbito legal y jurídico son exhaustivas y precisas...",
+      "eres 100% fiable": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio con información fiable y actualizada",
+      "qué preguntas puedo hacer": "Dentro del ámbito legal y jurídico, puedes formular preguntas relacionadas con temas legales",
+      "qué eres": "módulo de IA generativa que te aporta precisión, agilidad y seguridad",
+      "dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
+      "de dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
+      "cómo estás entrenado": "con contenidos jurídicos actualizados y sólo te ofreceré información cuando realmente haya garantía de fiabilidad.",
+      "háblame de tus funcionalidades": "asistente legal k+, análisis de documentos, sintesis de documentos, traducción de documentos",
+      "a cuántos idiomas traduces": "a 9 idiomas",
+      "cómo evolucionas": "K+ va más allá de un mero conjunto de funcionalidades para convertirse en una solución en constante evolución...",
+      "cómo ahorras tiempo": "ahorro tiempo en cada consulta con las respuestas precisas del asistente de IA generativa...",
+      "cómo es tu empresa": "Somos un proveedor LegalTech que aplica rigurosamente la IA generativa...",
+      "qué es k Plus": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad.",
+      "qué es kaplus": "un módulo en constante evolución...",
+      "qué es K+": "un módulo en constante evolución...",
+      "dónde se aplica y en qué se basa": "En las soluciones de información jurídica más completas del mercado...",
+      "cuál es la base tecnológica de K Plus": "K+ aúna la potencia de Azure OpenAI con el entrenamiento propio del Grupo Karnov y Aranzadi LA LEY...",
+      "cuál es la base tecnológica de ka Plus": "K+ aúna la potencia de Azure OpenAI...",
+      "cuál es la base tecnológica de K+": "K+ aúna la potencia de Azure OpenAI...",
+      "eres seguro": "El componente utiliza nuestro sistema de autenticación y autorización...",
+      "cuáles son nuestros elementos diferenciadores": "Base legal más exacta posible, Conversación, Traducción...",
+      "hola k": "Hola",
+      "Hola K": "Hola"
+    };
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+    let permissionGranted = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (recognition) {
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "es-ES";
+
+        recognition.onresult = (event) => {
+          document.getElementById("textInput").value = event.results[0][0].transcript;
+        };
+
+        recognition.onerror = () => {
+          alert("Error con el reconocimiento de voz. Inténtalo de nuevo.");
+        };
+
+        recognition.onend = () => {
+          permissionGranted = true;
+        };
+      } else {
+        alert("Tu navegador no soporta reconocimiento de voz.");
+      }
+    });
+
+    function startRecognition() {
+      if (recognition) {
+        recognition.start();
+        console.log("Reconocimiento de voz activado");
+      } else {
+        alert("Tu navegador no soporta reconocimiento de voz.");
+      }
+    }
+
+    async function sendMessage() {
+      const inputText = document.getElementById("textInput").value.trim();
+      if (!inputText) return;
+
+      try {
         const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: inputText })
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: inputText })
         });
 
         if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+          throw new Error(`Error HTTP: ${response.status}`);
         }
 
         const data = await response.json();
@@ -121,41 +126,31 @@ function startRecognition() {
 
         let respuestaTexto = "";
 
-        // Verifica si data.response existe y es un objeto
         if (data.response) {
-            if (typeof data.response === "object") {
-                // Busca la propiedad que contenga el texto
-                if (data.response.message) {
-                    respuestaTexto = data.response.message;
-                } else if (data.response.content) {
-                    respuestaTexto = data.response.content;
-                } else {
-                    respuestaTexto = JSON.stringify(data.response, null, 2); // Formatea JSON
-                }
-            } else {
-                respuestaTexto = data.response; // Si es string, lo usa directamente
-            }
+          if (typeof data.response === "object") {
+            respuestaTexto = data.response.message || data.response.content || JSON.stringify(data.response, null, 2);
+          } else {
+            respuestaTexto = data.response;
+          }
         } else {
-            respuestaTexto = "No se recibió una respuesta válida.";
+          respuestaTexto = "No se recibió una respuesta válida.";
         }
 
-        document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto; 
+        document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
         displayResponse(respuestaTexto);
-
-    } catch (error) {
+      } catch (error) {
         console.error("Error en la API:", error);
         document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
+      }
     }
-}
 
-         function displayResponse(response) {
-             document.getElementById("responseText").innerText = "Respuesta: " + response; //response
- 
-             const synth = window.speechSynthesis;
-             const utterance = new SpeechSynthesisUtterance(response);
-             utterance.lang = "es-ES";
-             synth.speak(utterance);
-         }
-     </script>
- </body>
- </html>
+    function displayResponse(response) {
+      document.getElementById("responseText").innerText = "Respuesta: " + response;
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(response);
+      utterance.lang = "es-ES";
+      synth.speak(utterance);
+    }
+  </script>
+</body>
+</html>
