@@ -43,104 +43,97 @@
 
   <!-- Script de voz y mensaje -->
   <script>
-    const predefinedQA = {
-      "cómo te llamas": "K",
-      "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico...",
-      "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
-      "cómo son tus respuestas": "Las respuestas que proporciono son exhaustivas, basadas en legislación aplicable...",
-      "eres 100% fiable": "K+ ha sido entrenado con información jurídica fiable y actualizada.",
-      "qué preguntas puedo hacer": "Preguntas sobre normativa, procedimientos legales, contratos, etc.",
-      "qué eres": "Módulo de IA generativa para entornos legales.",
-      "dónde obtienes tus respuestas": "De legislación consolidada y contenidos expertos.",
-      "cómo estás entrenado": "Con contenidos jurídicos actualizados y validados.",
-      "hola k": "Hola",
-      "Hola K": "Hola"
-    };
+  const predefinedQA = {
+    "cómo te llamas": "K",
+    "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico...",
+    "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
+    "hola k": "Hola",
+    "Hola K": "Hola"
+  };
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-    let permissionGranted = false;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+  let micActivo = false;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (recognition) {
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = "es-ES";
+  document.addEventListener('DOMContentLoaded', () => {
+    if (recognition) {
+      recognition.continuous = true; // ¡sigue escuchando!
+      recognition.interimResults = false;
+      recognition.lang = "es-ES";
 
-        recognition.onresult = (event) => {
-          document.getElementById("textInput").value = event.results[0][0].transcript;
-        };
+      recognition.onresult = (event) => {
+        const transcript = event.results[event.results.length - 1][0].transcript;
+        document.getElementById("textInput").value = transcript;
+        console.log("🎙 Texto captado:", transcript);
+      };
 
-        recognition.onerror = () => {
-          alert("Error con el reconocimiento de voz. Inténtalo de nuevo.");
-        };
+      recognition.onerror = (event) => {
+        console.error("Error de reconocimiento:", event.error);
+        micActivo = false;
+      };
+    } else {
+      alert("Tu navegador no soporta reconocimiento de voz.");
+    }
+  });
 
-        recognition.onend = () => {
-          permissionGranted = true;
-        };
-      } else {
-        alert("Tu navegador no soporta reconocimiento de voz.");
-      }
-    });
+  function startRecognition() {
+    if (recognition && !micActivo) {
+      recognition.start();
+      micActivo = true;
+      console.log("🎤 Micrófono activado y en espera continua");
+    }
+  }
 
-    function startRecognition() {
-      if (recognition) {
-        recognition.start();
-        console.log("🎤 Micrófono activado");
-      }
+  async function sendMessage() {
+    if (recognition && micActivo) {
+      recognition.stop(); // 🔇 apagamos al enviar
+      micActivo = false;
+      console.log("🎤 Micrófono desactivado manualmente al enviar");
     }
 
-    async function sendMessage() {
-      // 🔇 Apaga el micrófono al enviar
-      if (recognition && recognition.stop) {
-        recognition.stop();
-        console.log("🎤 Micrófono apagado al enviar");
+    const inputText = document.getElementById("textInput").value.trim();
+    if (!inputText) return;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: inputText })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
       }
 
-      const inputText = document.getElementById("textInput").value.trim();
-      if (!inputText) return;
+      const data = await response.json();
+      let respuestaTexto = "";
 
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: inputText })
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("🔹 Respuesta de la API:", data);
-
-        let respuestaTexto = "";
-
-        if (data.response) {
-          if (typeof data.response === "object") {
-            respuestaTexto = data.response.message || data.response.content || JSON.stringify(data.response, null, 2);
-          } else {
-            respuestaTexto = data.response;
-          }
+      if (data.response) {
+        if (typeof data.response === "object") {
+          respuestaTexto = data.response.message || data.response.content || JSON.stringify(data.response, null, 2);
         } else {
-          respuestaTexto = "No se recibió una respuesta válida.";
+          respuestaTexto = data.response;
         }
-
-        document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
-        displayResponse(respuestaTexto);
-      } catch (error) {
-        console.error("Error en la API:", error);
-        document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
+      } else {
+        respuestaTexto = "No se recibió una respuesta válida.";
       }
-    }
 
-    function displayResponse(response) {
-      document.getElementById("responseText").innerText = "Respuesta: " + response;
-      const synth = window.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(response);
-      utterance.lang = "es-ES";
-      synth.speak(utterance);
+      document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
+      displayResponse(respuestaTexto);
+    } catch (error) {
+      console.error("Error en la API:", error);
+      document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
     }
-  </script>
+  }
+
+  function displayResponse(response) {
+    document.getElementById("responseText").innerText = "Respuesta: " + response;
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(response);
+    utterance.lang = "es-ES";
+    synth.speak(utterance);
+  }
+</script>
+
 </body>
 </html>
