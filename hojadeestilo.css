@@ -1,21 +1,29 @@
-/* Estilos generales */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* Estilos base para ocupar toda la pantalla */
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
 }
 
-/* Contenedor principal */
+/* Contenedor general de la página */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Contenido principal */
 .container {
-    background: rgb(255, 255, 255);
+    flex: 1; /* Esto empuja el footer hacia abajo si hay poco contenido */
+    background: #ffffff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
     max-width: 700px;
     margin: 2em auto;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 /* Sección de imágenes superiores */
@@ -25,17 +33,17 @@ body {
     gap: 20px;
 }
 
-.top-image {
-    width: 30%;
-    border-radius: 10px;
-}
-
 .logo-all {
     width: 30%;
     border-radius: 10px;
 }
 
-/* Imagen individual ajustada */
+.top-image {
+    width: 30%;
+    border-radius: 10px;
+}
+
+/* Imagen ajustada individual */
 .mi-imagen {
     width: 100% !important;
     height: 200px !important;
@@ -51,9 +59,9 @@ body {
     margin-top: 20px;
 }
 
-.bottom-image,
 .left-image,
-.right-img {
+.right-img,
+.bottom-image {
     width: 45%;
     border-radius: 10px;
 }
@@ -98,14 +106,13 @@ button:hover {
     background: #e9ecef;
 }
 
-/* Footer */
+/* Footer al final de la página */
 footer {
-    display: block;
+    background-color: #e0e0e0;
     text-align: center;
     padding: 1em;
-    background-color: #e0e0e0;
     font-size: 0.9em;
-    margin-top: 2em;
+    margin-top: auto;
 }
 
 footer a {
@@ -117,7 +124,7 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Responsive para móviles */
+/* Diseño responsive para móvil */
 @media (max-width: 480px) {
     .top-images,
     .bottom-images {
@@ -136,9 +143,9 @@ footer a:hover {
 
     .logo-all,
     .top-image,
-    .bottom-image,
     .left-image,
-    .right-img {
+    .right-img,
+    .bottom-image {
         width: 90%;
     }
 }
