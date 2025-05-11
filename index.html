@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <!-- Footer al final de la página -->
+    <!-- Footer -->
     <footer>
       <p>
         &copy; 2025 Aranzadi La Ley. Todos los derechos reservados. |
@@ -41,26 +41,18 @@
     </footer>
   </div>
 
-  <!-- Script de reconocimiento de voz y respuesta -->
+  <!-- Script de voz y mensaje -->
   <script>
     const predefinedQA = {
       "cómo te llamas": "K",
       "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico...",
       "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
-      "cómo son tus respuestas": "Las respuestas que proporciono en el ámbito legal y jurídico son exhaustivas y precisas...",
-      "eres 100% fiable": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio con información fiable y actualizada",
-      "qué preguntas puedo hacer": "Dentro del ámbito legal y jurídico, puedes formular preguntas relacionadas con temas legales",
-      "qué eres": "módulo de IA generativa que te aporta precisión, agilidad y seguridad",
-      "dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
-      "cómo estás entrenado": "con contenidos jurídicos actualizados y sólo te ofreceré información cuando haya garantía de fiabilidad.",
-      "háblame de tus funcionalidades": "asistente legal k+, análisis de documentos, síntesis de documentos, traducción de documentos",
-      "a cuántos idiomas traduces": "a 9 idiomas",
-      "cómo evolucionas": "K+ va más allá de un conjunto de funcionalidades; es una solución en constante evolución",
-      "cómo ahorras tiempo": "Respuestas rápidas y precisas, sin textos ni conceptos innecesarios",
-      "cómo es tu empresa": "Somos un proveedor LegalTech que aplica IA generativa de forma rigurosa...",
-      "qué es k Plus": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad",
-      "cuál es la base tecnológica de K Plus": "Azure OpenAI + entrenamiento propio de Karnov y Aranzadi LA LEY en un entorno seguro",
-      "eres seguro": "Utilizamos autenticación y encriptación de datos para garantizar la seguridad",
+      "cómo son tus respuestas": "Las respuestas que proporciono son exhaustivas, basadas en legislación aplicable...",
+      "eres 100% fiable": "K+ ha sido entrenado con información jurídica fiable y actualizada.",
+      "qué preguntas puedo hacer": "Preguntas sobre normativa, procedimientos legales, contratos, etc.",
+      "qué eres": "Módulo de IA generativa para entornos legales.",
+      "dónde obtienes tus respuestas": "De legislación consolidada y contenidos expertos.",
+      "cómo estás entrenado": "Con contenidos jurídicos actualizados y validados.",
       "hola k": "Hola",
       "Hola K": "Hola"
     };
@@ -94,13 +86,17 @@
     function startRecognition() {
       if (recognition) {
         recognition.start();
-        console.log("Reconocimiento de voz activado");
-      } else {
-        alert("Tu navegador no soporta reconocimiento de voz.");
+        console.log("🎤 Micrófono activado");
       }
     }
 
     async function sendMessage() {
+      // 🔇 Apaga el micrófono al enviar
+      if (recognition && recognition.stop) {
+        recognition.stop();
+        console.log("🎤 Micrófono apagado al enviar");
+      }
+
       const inputText = document.getElementById("textInput").value.trim();
       if (!inputText) return;
 
@@ -116,7 +112,7 @@
         }
 
         const data = await response.json();
-        console.log("🔹 Respuesta de OpenAI:", data);
+        console.log("🔹 Respuesta de la API:", data);
 
         let respuestaTexto = "";
 
@@ -148,4 +144,3 @@
   </script>
 </body>
 </html>
-
