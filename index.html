@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="hojadeestilo.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="hojadeestilo.css" />
   <title>Chat con Voz</title>
 </head>
 <body>
@@ -11,12 +11,12 @@
     <div class="container">
       <!-- Sección de imágenes superiores -->
       <div class="top-images">
-        <img src="img/logo nuevo.PNG" alt="Asistente IA" width="20%">
-        <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image">
+        <img src="img/logo nuevo.PNG" alt="Asistente IA" class="logo-all" />
+        <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image" />
       </div>
 
       <!-- Input y botones -->
-      <input type="text" id="textInput" placeholder="Pregunta algo...">
+      <input type="text" id="textInput" placeholder="Pregunta algo..." />
       <button onclick="startRecognition()">🎙 Hablar</button>
       <button onclick="sendMessage()">📩 Enviar</button>
 
@@ -25,8 +25,8 @@
 
       <!-- Sección de imágenes inferiores -->
       <div class="bottom-images">
-        <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" width="90%">
-        <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen">
+        <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" />
+        <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen" />
       </div>
     </div>
 
@@ -41,32 +41,26 @@
     </footer>
   </div>
 
+  <!-- Script de reconocimiento de voz y respuesta -->
   <script>
     const predefinedQA = {
       "cómo te llamas": "K",
-      "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico en general...",
+      "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico...",
       "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
       "cómo son tus respuestas": "Las respuestas que proporciono en el ámbito legal y jurídico son exhaustivas y precisas...",
       "eres 100% fiable": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio con información fiable y actualizada",
       "qué preguntas puedo hacer": "Dentro del ámbito legal y jurídico, puedes formular preguntas relacionadas con temas legales",
       "qué eres": "módulo de IA generativa que te aporta precisión, agilidad y seguridad",
       "dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
-      "de dónde obtienes tus respuestas": "De la legislación consolidada y de los contenidos expertos y siempre actualizados de la base de datos",
-      "cómo estás entrenado": "con contenidos jurídicos actualizados y sólo te ofreceré información cuando realmente haya garantía de fiabilidad.",
-      "háblame de tus funcionalidades": "asistente legal k+, análisis de documentos, sintesis de documentos, traducción de documentos",
+      "cómo estás entrenado": "con contenidos jurídicos actualizados y sólo te ofreceré información cuando haya garantía de fiabilidad.",
+      "háblame de tus funcionalidades": "asistente legal k+, análisis de documentos, síntesis de documentos, traducción de documentos",
       "a cuántos idiomas traduces": "a 9 idiomas",
-      "cómo evolucionas": "K+ va más allá de un mero conjunto de funcionalidades para convertirse en una solución en constante evolución...",
-      "cómo ahorras tiempo": "ahorro tiempo en cada consulta con las respuestas precisas del asistente de IA generativa...",
-      "cómo es tu empresa": "Somos un proveedor LegalTech que aplica rigurosamente la IA generativa...",
-      "qué es k Plus": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad.",
-      "qué es kaplus": "un módulo en constante evolución...",
-      "qué es K+": "un módulo en constante evolución...",
-      "dónde se aplica y en qué se basa": "En las soluciones de información jurídica más completas del mercado...",
-      "cuál es la base tecnológica de K Plus": "K+ aúna la potencia de Azure OpenAI con el entrenamiento propio del Grupo Karnov y Aranzadi LA LEY...",
-      "cuál es la base tecnológica de ka Plus": "K+ aúna la potencia de Azure OpenAI...",
-      "cuál es la base tecnológica de K+": "K+ aúna la potencia de Azure OpenAI...",
-      "eres seguro": "El componente utiliza nuestro sistema de autenticación y autorización...",
-      "cuáles son nuestros elementos diferenciadores": "Base legal más exacta posible, Conversación, Traducción...",
+      "cómo evolucionas": "K+ va más allá de un conjunto de funcionalidades; es una solución en constante evolución",
+      "cómo ahorras tiempo": "Respuestas rápidas y precisas, sin textos ni conceptos innecesarios",
+      "cómo es tu empresa": "Somos un proveedor LegalTech que aplica IA generativa de forma rigurosa...",
+      "qué es k Plus": "un módulo en constante evolución que permite ahorrar tiempo, ganar seguridad y ofrecer un servicio legal de calidad",
+      "cuál es la base tecnológica de K Plus": "Azure OpenAI + entrenamiento propio de Karnov y Aranzadi LA LEY en un entorno seguro",
+      "eres seguro": "Utilizamos autenticación y encriptación de datos para garantizar la seguridad",
       "hola k": "Hola",
       "Hola K": "Hola"
     };
@@ -154,3 +148,4 @@
   </script>
 </body>
 </html>
+
