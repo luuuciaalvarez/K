@@ -109,4 +109,19 @@ button:hover {
 
 /* Footer fijo al final */
 footer {
-    background
+    background-color: #e0e0e0;
+    text-align: center;
+    padding: 1em;
+    font-size: 0.9em;
+    margin-top: auto;
+    width: 100%;
+}
+
+footer a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
