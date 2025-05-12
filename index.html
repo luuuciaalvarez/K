@@ -61,11 +61,20 @@
       recognition.interimResults = false;
       recognition.lang = "es-ES";
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[event.results.length - 1][0].transcript;
-        document.getElementById("textInput").value = transcript;
-        console.log("🎙 Texto captado:", transcript);
-      };
+  recognition.onresult = (event) => {
+  const transcript = event.results[event.results.length - 1][0].transcript;
+  const input = document.getElementById("textInput");
+
+  // Agrega un espacio si el campo ya tiene texto
+  if (input.value.trim() !== "") {
+    input.value += " " + transcript;
+  } else {
+    input.value = transcript;
+  }
+
+  console.log("🎙 Texto añadido:", transcript);
+};
+
 
       recognition.onerror = (event) => {
         console.error("Error de reconocimiento:", event.error);
