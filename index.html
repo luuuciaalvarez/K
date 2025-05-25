@@ -20,6 +20,9 @@
       <button onclick="startRecognition()">🎙 Hablar</button>
       <button onclick="sendMessage()">📩 Enviar</button>
 
+      <!-- Imagen de carga -->
+      <img id="loadingImage" src="img/typing_dots_black.gif" alt="Cargando..." style="display: none; width: 50px; margin: auto;" />
+
       <!-- Respuesta -->
       <p class="response" id="responseText"></p>
 
@@ -65,7 +68,6 @@
           const transcript = event.results[event.results.length - 1][0].transcript;
           const input = document.getElementById("textInput");
 
-          // Añadir nuevo texto al final del campo sin borrar lo anterior
           if (input.value.trim() !== "") {
             input.value += " " + transcript;
           } else {
@@ -102,16 +104,16 @@
       const inputText = document.getElementById("textInput").value.trim();
       if (!inputText) return;
 
+      // Mostrar imagen de "pensando"
+      document.getElementById("loadingImage").style.display = "block";
+      document.getElementById("responseText").innerText = "";
+
       try {
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: inputText })
         });
-
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
 
         const data = await response.json();
         let respuestaTexto = "";
@@ -126,11 +128,13 @@
           respuestaTexto = "No se recibió una respuesta válida.";
         }
 
-        document.getElementById("responseText").innerText = "Respuesta: " + respuestaTexto;
         displayResponse(respuestaTexto);
       } catch (error) {
         console.error("Error en la API:", error);
         document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
+      } finally {
+        // Ocultar imagen de "pensando"
+        document.getElementById("loadingImage").style.display = "none";
       }
     }
 
