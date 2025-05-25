@@ -125,3 +125,46 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
+/* Animación de puntos de escritura */
+.typing-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    gap: 5px;
+    margin: 10px auto;
+}
+
+.typing-dots span {
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 50%;
+    animation: blink 1.4s infinite both;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0%, 80%, 100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+  
+
+
+
+   
