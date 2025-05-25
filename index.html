@@ -5,6 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="hojadeestilo.css" />
   <title>Chat con Voz</title>
+  <style>
+    .typing-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      gap: 5px;
+      margin: 10px auto;
+    }
+
+    .typing-dots span {
+      width: 10px;
+      height: 10px;
+      background-color: black;
+      border-radius: 50%;
+      animation: blink 1.4s infinite both;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes blink {
+      0%, 80%, 100% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      40% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="page-wrapper">
@@ -20,8 +57,10 @@
       <button onclick="startRecognition()">🎙 Hablar</button>
       <button onclick="sendMessage()">📩 Enviar</button>
 
-      <!-- Imagen de carga -->
-      <img id="loadingImage" src="img/typing_dots_black.gif" alt="Cargando..." style="display: none; width: 50px; margin: auto;" />
+      <!-- Indicador de carga animado -->
+      <div id="loadingDots" class="typing-dots" style="display: none;">
+        <span></span><span></span><span></span>
+      </div>
 
       <!-- Respuesta -->
       <p class="response" id="responseText"></p>
@@ -104,8 +143,8 @@
       const inputText = document.getElementById("textInput").value.trim();
       if (!inputText) return;
 
-      // Mostrar imagen de "pensando"
-      document.getElementById("loadingImage").style.display = "block";
+      // Mostrar animación de carga
+      document.getElementById("loadingDots").style.display = "flex";
       document.getElementById("responseText").innerText = "";
 
       try {
@@ -133,8 +172,8 @@
         console.error("Error en la API:", error);
         document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
       } finally {
-        // Ocultar imagen de "pensando"
-        document.getElementById("loadingImage").style.display = "none";
+        // Ocultar animación de carga
+        document.getElementById("loadingDots").style.display = "none";
       }
     }
 
@@ -148,4 +187,3 @@
   </script>
 </body>
 </html>
-
