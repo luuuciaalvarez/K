@@ -177,13 +177,14 @@
       }
     }
 
-    function displayResponse(response) {
-      document.getElementById("responseText").innerText = "Respuesta: " + response;
-      const synth = window.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(response);
-      utterance.lang = "es-ES";
-      synth.speak(utterance);
-    }
+       function displayResponse(response) {
+       document.getElementById("responseText").innerText = "Respuesta: " + response;
+       if (micActivo) {
+       const synth = window.speechSynthesis;
+       const utterance = new SpeechSynthesisUtterance(response);
+       utterance.lang = "es-ES";
+       synth.speak(utterance);
+      }
   </script>
 </body>
 </html>
