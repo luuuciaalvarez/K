@@ -85,14 +85,6 @@
 
   <!-- Script de voz y mensaje -->
   <script>
-    const predefinedQA = {
-      "cómo te llamas": "K",
-      "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico...",
-      "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
-      "hola k": "Hola",
-      "Hola K": "Hola"
-    };
-
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = SpeechRecognition ? new SpeechRecognition() : null;
     let micActivo = false;
@@ -134,14 +126,12 @@
     }
 
     async function sendMessage() {
+      if (!document.getElementById("textInput").value.trim()) return;
+
       if (recognition && micActivo) {
-        recognition.stop();
-        micActivo = false;
+        recognition.stop();  // Paramos, pero NO desactivamos micActivo aún
         console.log("🎤 Micrófono detenido al enviar");
       }
-
-      const inputText = document.getElementById("textInput").value.trim();
-      if (!inputText) return;
 
       // Mostrar animación de carga
       document.getElementById("loadingDots").style.display = "flex";
@@ -151,7 +141,7 @@
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: inputText })
+          body: JSON.stringify({ message: document.getElementById("textInput").value.trim() })
         });
 
         const data = await response.json();
@@ -172,7 +162,6 @@
         console.error("Error en la API:", error);
         document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
       } finally {
-        // Ocultar animación de carga
         document.getElementById("loadingDots").style.display = "none";
       }
     }
@@ -180,20 +169,27 @@
     function displayResponse(response) {
       document.getElementById("responseText").innerText = "Respuesta: " + response;
 
-      if (micActivo) {
+      if (micActivo && 'speechSynthesis' in window) {
         const synth = window.speechSynthesis;
         const utterance = new SpeechSynthesisUtterance(response);
         utterance.lang = "es-ES";
 
         utterance.onend = () => {
           console.log("🔁 Volviendo a escuchar...");
-          recognition.start(); // Reactiva el reconocimiento
+          recognition.start(); // Reactiva escucha automática
+        };
+
+        utterance.onerror = (e) => {
+          console.error("❌ Error al hablar:", e.error);
         };
 
         synth.speak(utterance);
       }
+
+      micActivo = false; // Se desactiva tras procesar
     }
   </script>
 </body>
 </html>
-    
+
+   
