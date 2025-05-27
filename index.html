@@ -1,98 +1,190 @@
-<script>
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-  let micActivo = false;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="hojadeestilo.css" />
+  <title>Chat con Voz</title>
+  <style>
+    .typing-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      gap: 5px;
+      margin: 10px auto;
+    }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    if (recognition) {
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      recognition.lang = "es-ES";
+    .typing-dots span {
+      width: 10px;
+      height: 10px;
+      background-color: black;
+      border-radius: 50%;
+      animation: blink 1.4s infinite both;
+    }
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[event.results.length - 1][0].transcript;
-        const input = document.getElementById("textInput");
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
 
-        input.value = input.value.trim() ? input.value + " " + transcript : transcript;
-        console.log("🎙 Texto añadido:", transcript);
-      };
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
-      recognition.onerror = (event) => {
-        console.error("⚠️ Error de reconocimiento:", event.error);
+    @keyframes blink {
+      0%, 80%, 100% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      40% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="container">
+      <!-- Sección de imágenes superiores -->
+      <div class="top-images">
+        <img src="img/logo nuevo.PNG" alt="Asistente IA" class="logo-all" />
+        <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image" />
+      </div>
+
+      <!-- Input y botones -->
+      <input type="text" id="textInput" placeholder="Pregunta algo..." />
+      <button onclick="startRecognition()">🎙 Hablar</button>
+      <button onclick="sendMessage()">📩 Enviar</button>
+
+      <!-- Indicador de carga animado -->
+      <div id="loadingDots" class="typing-dots" style="display: none;">
+        <span></span><span></span><span></span>
+      </div>
+
+      <!-- Respuesta -->
+      <p class="response" id="responseText"></p>
+
+      <!-- Sección de imágenes inferiores -->
+      <div class="bottom-images">
+        <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" />
+        <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen" />
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+        &copy; 2025 Aranzadi La Ley. Todos los derechos reservados. |
+        <a href="https://www.aranzadilaley.es/aviso-legal-ia.html" target="_blank" rel="noopener noreferrer">
+          Aviso Legal
+        </a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Script de voz y mensaje -->
+  <script>
+    const predefinedQA = {
+      "cómo te llamas": "K",
+      "a qué puedes contestar": "Puedo contestar a cuestiones relacionadas con el ámbito legal y jurídico...",
+      "qué funciones tienes": "K+ ha sido entrenado para responder cuestiones en el ámbito regulatorio...",
+      "hola k": "Hola",
+      "Hola K": "Hola"
+    };
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+    let micActivo = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (recognition) {
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.lang = "es-ES";
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[event.results.length - 1][0].transcript;
+          const input = document.getElementById("textInput");
+
+          if (input.value.trim() !== "") {
+            input.value += " " + transcript;
+          } else {
+            input.value = transcript;
+          }
+
+          console.log("🎙 Texto añadido:", transcript);
+        };
+
+        recognition.onerror = (event) => {
+          console.error("Error de reconocimiento:", event.error);
+          micActivo = false;
+        };
+      } else {
+        alert("Tu navegador no soporta reconocimiento de voz.");
+      }
+    });
+
+    function startRecognition() {
+      if (recognition && !micActivo) {
+        recognition.start();
+        micActivo = true;
+        console.log("🎤 Micrófono activado y escuchando...");
+      }
+    }
+
+    async function sendMessage() {
+      if (recognition && micActivo) {
+        recognition.stop();
         micActivo = false;
-        alert("Hubo un problema con el micrófono: " + event.error);
-      };
+        console.log("🎤 Micrófono detenido al enviar");
+      }
 
-    } else {
-      alert("⚠️ Este navegador no soporta reconocimiento de voz.");
+      const inputText = document.getElementById("textInput").value.trim();
+      if (!inputText) return;
+
+      // Mostrar animación de carga
+      document.getElementById("loadingDots").style.display = "flex";
+      document.getElementById("responseText").innerText = "";
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: inputText })
+        });
+
+        const data = await response.json();
+        let respuestaTexto = "";
+
+        if (data.response) {
+          if (typeof data.response === "object") {
+            respuestaTexto = data.response.message || data.response.content || JSON.stringify(data.response, null, 2);
+          } else {
+            respuestaTexto = data.response;
+          }
+        } else {
+          respuestaTexto = "No se recibió una respuesta válida.";
+        }
+
+        displayResponse(respuestaTexto);
+      } catch (error) {
+        console.error("Error en la API:", error);
+        document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
+      } finally {
+        // Ocultar animación de carga
+        document.getElementById("loadingDots").style.display = "none";
+      }
     }
-  });
 
-  function startRecognition() {
-    if (!recognition) {
-      alert("⚠️ El reconocimiento de voz no está disponible.");
-      return;
-    }
-
-    if (!micActivo) {
-      recognition.start();
-      micActivo = true;
-      console.log("🎤 Micrófono activado y escuchando...");
-    }
-  }
-
-  async function sendMessage() {
-    if (!document.getElementById("textInput").value.trim()) return;
-
-    if (recognition && micActivo) {
-      recognition.stop();
-      console.log("🎤 Micrófono detenido al enviar");
-    }
-
-    document.getElementById("loadingDots").style.display = "flex";
-    document.getElementById("responseText").innerText = "";
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: document.getElementById("textInput").value.trim() })
-      });
-
-      const data = await response.json();
-      const respuestaTexto = typeof data.response === "object"
-        ? data.response.message || data.response.content || JSON.stringify(data.response, null, 2)
-        : data.response || "No se recibió una respuesta válida.";
-
-      displayResponse(respuestaTexto);
-    } catch (error) {
-      console.error("❌ Error en la API:", error);
-      document.getElementById("responseText").innerText = "No se pudo conectar con la IA.";
-      micActivo = false;
-    } finally {
-      document.getElementById("loadingDots").style.display = "none";
-    }
-  }
-
-  function displayResponse(response) {
-    document.getElementById("responseText").innerText = "Respuesta: " + response;
-
-    if (micActivo && 'speechSynthesis' in window) {
+    function displayResponse(response) {
+      document.getElementById("responseText").innerText = "Respuesta: " + response;
       const synth = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(response);
       utterance.lang = "es-ES";
-
-      utterance.onend = () => {
-        console.log("🔁 Vuelve a escuchar tras hablar.");
-        recognition.start(); // reinicia la escucha
-      };
-
       synth.speak(utterance);
     }
-  }
-</script>
-
+  </script>
+</body>
+</html>    
     
-
-   
-      
