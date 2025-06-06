@@ -48,12 +48,34 @@
       gap: 10px;
       margin-top: 10px;
     }
+
+    .config-btn {
+      background: none;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      margin: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .config-btn:hover {
+      background-color: #e0f0ff;
+      border-radius: 5px;
+    }
+
+    .icono-config {
+      width: 32px;
+      height: 32px;
+      display: block;
+    }
   </style>
 </head>
 <body>
   <div class="page-wrapper">
     <div class="container">
-      <!-- Sección de imágenes superiores -->
+      <!-- Imágenes superiores -->
       <div class="top-images">
         <img src="img/logo nuevo.PNG" alt="Asistente IA" class="logo-all" />
         <img src="img/k+.PNG" alt="Aranzadi La Ley" class="top-image" />
@@ -66,11 +88,11 @@
         <button onclick="sendMessage()">📩 Enviar</button>
         <button onclick="startRecognition()">🎙 Hablar</button>
         <button class="config-btn" onclick="openSettings()" aria-label="Configuración">
-        <img src="img/boton-configuracion.png" alt="Configuración" class="icono-config" />
+          <img src="img/boton-configuracion.png" alt="Configuración" class="icono-config" />
         </button>
       </div>
 
-      <!-- Indicador de carga animado -->
+      <!-- Cargando -->
       <div id="loadingDots" class="typing-dots" style="display: none;">
         <span></span><span></span><span></span>
       </div>
@@ -78,7 +100,7 @@
       <!-- Respuesta -->
       <p class="response" id="responseText"></p>
 
-      <!-- Sección de imágenes inferiores -->
+      <!-- Imágenes inferiores -->
       <div class="bottom-images">
         <img src="img/foto Les Novateurs (1).png" alt="Imagen Ilustrativa" class="bottom-image" />
         <img src="img/Les Novateurs logo.PNG" alt="Equipo de IA" class="mi-imagen" />
@@ -96,7 +118,7 @@
     </footer>
   </div>
 
-  <!-- Script de voz y mensaje -->
+  <!-- Script -->
   <script>
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = SpeechRecognition ? new SpeechRecognition() : null;
@@ -111,38 +133,14 @@
         recognition.onresult = (event) => {
           const transcript = event.results[event.results.length - 1][0].transcript;
           const input = document.getElementById("textInput");
-
-          if (input.value.trim() !== "") {
-            input.value += " " + transcript;
-          } else {
-            input.value = transcript;
-          }
-
+          input.value = input.value.trim() ? input.value + " " + transcript : transcript;
           console.log("🎙 Texto añadido:", transcript);
         };
 
         recognition.onerror = (event) => {
           console.error("Error de reconocimiento:", event.error);
-          micActivo = false;
-        };
-      } else {
-        alert("Tu navegador no soporta reconocimiento de voz.");
-      }
-    });
+          micActivo = fals
 
-    function startRecognition() {
-      if (recognition && !micActivo) {
-        recognition.start();
-        micActivo = true;
-        console.log("🎤 Micrófono activado y escuchando...");
-      }
-    }
-
-    async function sendMessage() {
-      if (!document.getElementById("textInput").value.trim()) return;
-
-      if (recognition && micActivo) {
-        recognition.stop();
 
      
  
