@@ -129,7 +129,7 @@ button:hover {
 /* Cuadro visual para la respuesta */
 .respuesta-cuadro {
     border: 2px solid #007acc;            /* Borde azul */
-    background-color: #f0f8ff;            /* Fondo azul claro */
+    background-color: #ffffff;            /* Fondo azul claro */
     padding: 15px 20px;                   /* Espaciado interno */
     border-radius: 10px;                  /* Bordes redondeados */
     max-width: 100%;
