@@ -65,7 +65,9 @@
       <div class="button-group">
         <button onclick="sendMessage()">📩 Enviar</button>
         <button onclick="startRecognition()">🎙 Hablar</button>
-        <button onclick="openSettings()">⚙️ Configuración</button>
+        <button class="config-btn" onclick="openSettings()" aria-label="Configuración">
+          <img src="img/boton configuracion.PNG" alt="Configuración" class="icono-config" />
+        </button>
       </div>
 
       <!-- Indicador de carga animado -->
