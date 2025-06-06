@@ -102,6 +102,7 @@ button:hover {
     justify-content: center;
     gap: 10px;
     margin-top: 10px;
+
 }
 /* Botón configuración como imagen */
 .config-btn {
@@ -110,6 +111,9 @@ button:hover {
     padding: 5px;
     cursor: pointer;
     margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .config-btn:hover {
@@ -189,33 +193,7 @@ footer a:hover {
     }
 }
 
-/* Panel de configuración (oculto por defecto, opcional) */
-#configPanel {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 300px;
-    transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-}
 
-/* Fondo oscuro para el panel */
-#configBackdrop {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-}
 
 
   
