@@ -130,11 +130,11 @@ button:hover {
 .respuesta-cuadro {
     border: 2px solid #007acc;            /* Borde azul */
     background-color: #ffffff;            /* Fondo azul claro */
-    padding: 15px 20px;                   /* Espaciado interno */
+    padding: 20px 25px;                   /* Espaciado interno */
     border-radius: 10px;                  /* Bordes redondeados */
-    max-width: 100%;
-    margin: 20px auto;
-    box-shadow: 0 0 10px rgba(0, 122, 204, 0.1); /* Sombra ligera */
+    max-width: 90%;
+    margin: 30px auto;
+    box-shadow: 0 0 12px rgba(0, 122, 204, 0.15); /* Sombra ligera */
     text-align: left;                     /* Texto alineado a la izquierda */
     box-sizing: border-box;
 }
