@@ -126,22 +126,25 @@ button:hover {
     height: 32px;
 }
 
-/* Contenedor de respuesta con estilo de tarjeta */
+/* Cuadro visual para la respuesta */
 .respuesta-cuadro {
-    border: 2px solid #007acc;
-    background-color: #f0f8ff;
-    padding: 15px 20px;
-    border-radius: 10px;
+    border: 2px solid #007acc;            /* Borde azul */
+    background-color: #f0f8ff;            /* Fondo azul claro */
+    padding: 15px 20px;                   /* Espaciado interno */
+    border-radius: 10px;                  /* Bordes redondeados */
     max-width: 100%;
     margin: 20px auto;
-    box-shadow: 0 0 10px rgba(0, 122, 204, 0.1);
-    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 122, 204, 0.1); /* Sombra ligera */
+    text-align: left;                     /* Texto alineado a la izquierda */
+    box-sizing: border-box;
 }
 
+/* Título opcional dentro del cuadro */
 .respuesta-cuadro h3 {
     margin-top: 0;
     color: #005a9c;
     font-size: 18px;
+    font-weight: bold;
 }
 
 /* Texto de la respuesta */
@@ -149,9 +152,10 @@ button:hover {
     margin: 0;
     font-size: 16px;
     color: #333;
-    font-weight: normal;
     line-height: 1.5;
+    word-wrap: break-word;
 }
+
 /* Footer fijo al final */
 footer {
     background-color: #e0e0e0;
