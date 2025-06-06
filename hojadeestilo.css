@@ -126,17 +126,32 @@ button:hover {
     height: 32px;
 }
 
-/* Respuesta */
-.response {
-    margin-top: 15px;
-    font-size: 16px;
-    color: #333;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 5px;
-    background: #e9ecef;
+/* Contenedor de respuesta con estilo de tarjeta */
+.respuesta-cuadro {
+    border: 2px solid #007acc;
+    background-color: #f0f8ff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    max-width: 100%;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(0, 122, 204, 0.1);
+    text-align: left;
 }
 
+.respuesta-cuadro h3 {
+    margin-top: 0;
+    color: #005a9c;
+    font-size: 18px;
+}
+
+/* Texto de la respuesta */
+.response {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: normal;
+    line-height: 1.5;
+}
 /* Footer fijo al final */
 footer {
     background-color: #e0e0e0;
