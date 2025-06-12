@@ -181,6 +181,7 @@
 
     function startRecognition() {
       if (recognition && !micActivo) {
+        document.getElementById("textInput").value = "";
         recognition.start();
         micActivo = true;
       }
