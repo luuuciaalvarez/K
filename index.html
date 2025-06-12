@@ -166,7 +166,12 @@
       const voces = window.speechSynthesis.getVoices();
       const select = document.getElementById("selectVoz");
       select.innerHTML = "";
-      voces.forEach((voz, i) => {
+
+    const vocesFiltradas = voces.filter(voz =>
+      (voz.name.includes("Microsoft Laura - Spanish (spain) (es-ES)") || voz.name.includes("Microsoft Pablo - Spanish (spain) (es-ES)")) &&
+      voz.lang.startsWith("es")
+      );
+      vocesFiltradas.forEach((voz, i) => {
         const option = document.createElement("option");
         option.value = i;
         option.textContent = `${voz.name} (${voz.lang})`;
@@ -174,7 +179,7 @@
       });
 
       select.onchange = () => {
-        vozSeleccionada = voces[select.value];
+        vozSeleccionada = vocesFiltradas[select.selectedIndex];
         document.getElementById("menuOpciones").style.display = "none";
       };
     }
