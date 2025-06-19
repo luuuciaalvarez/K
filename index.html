@@ -253,4 +253,44 @@
 
       if (reproducirVoz && 'speechSynthesis' in window) {
         const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(response);
+        utterance.lang = recognition.lang;
+        utterance.rate = velocidad;
+        if (vozSeleccionada) utterance.voice = vozSeleccionada;
 
+        utterance.onstart = () => {
+          mostrarBotonDetener();
+        };
+
+        utterance.onend = () => {
+          ocultarBotonDetener();
+          if (micActivo) recognition.start();
+        };
+
+        synth.speak(utterance);
+      }
+
+      micActivo = false;
+    }
+
+    function detenerVoz() {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        ocultarBotonDetener();
+      }
+    }
+
+    function mostrarBotonDetener() {
+      const boton = document.getElementById("btnDetenerVoz");
+      boton.classList.remove("oculto");
+    }
+
+    function ocultarBotonDetener() {
+      const boton = document.getElementById("btnDetenerVoz");
+      boton.classList.add("oculto");
+    }
+
+    window.speechSynthesis.onvoiceschanged = cargarVoces;
+  </script>
+</body>
+</html>
