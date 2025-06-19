@@ -284,8 +284,9 @@ footer a:hover {
     transition: opacity 0.4s ease, transform 0.4s ease;
     opacity: 1;
     transform: scale(1);
-    display: inline-block;
-
+    display: block;
+    margin-left: auto;
+    margin-bottom: 10px;
     font-size: 12px;
     padding: 4px 8px;
     border-radius: 4px;
