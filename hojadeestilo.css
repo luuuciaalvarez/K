@@ -276,7 +276,23 @@ footer a:hover {
     color: #005a9c;
     font-size: 14px;
 }
+/* Botón de detener voz (solo visible mientras habla) */
+.boton-detener {
+    background-color: #ffcccc;
+    color: #b30000;
+    font-weight: bold;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 1;
+    transform: scale(1);
+    display: inline-block;
+}
 
+/* Estado oculto con animación suave */
+.boton-detener.oculto {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
 
   
 
