@@ -285,6 +285,10 @@ footer a:hover {
     opacity: 1;
     transform: scale(1);
     display: inline-block;
+
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
 }
 
 /* Estado oculto con animación suave */
