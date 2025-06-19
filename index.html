@@ -35,6 +35,23 @@
       0%, 80%, 100% { opacity: 0; transform: scale(0.9); }
       40% { opacity: 1; transform: scale(1.2); }
     }
+
+    /* Botón detener voz con animación */
+    .boton-detener {
+      background-color: #ffcccc;
+      color: #b30000;
+      font-weight: bold;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      opacity: 1;
+      transform: scale(1);
+      display: inline-block;
+    }
+
+    .boton-detener.oculto {
+      opacity: 0;
+      transform: scale(0.8);
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -76,6 +93,9 @@
         </div>
 
         <button onclick="sendMessage()">📩 Enviar</button>
+
+        <!-- BOTÓN DETENER VOZ -->
+        <button id="btnDetenerVoz" onclick="detenerVoz()" class="boton-detener oculto">🛑 Detener Voz</button>
       </div>
 
       <!-- Indicador de carga -->
@@ -132,7 +152,7 @@
         };
       }
 
-      cargarVoces(); // Inicializar voces
+      cargarVoces();
     });
 
     function toggleMenu() {
@@ -165,24 +185,25 @@
     function cargarVoces() {
       const voces = window.speechSynthesis.getVoices();
       const select = document.getElementById("selectVoz");
+      if (!select) return;
       select.innerHTML = "";
 
-    const vocesFiltradas = voces.filter(voz =>
-      (voz.name.includes("Microsoft Laura") || voz.name.includes("Microsoft Pablo")) &&
-      voz.lang.startsWith("es")
+      const vocesFiltradas = voces.filter(voz =>
+        (voz.name.includes("Microsoft Laura") || voz.name.includes("Microsoft Pablo")) &&
+        voz.lang.startsWith("es")
       );
-    vocesFiltradas.forEach((voz, i) => {
-      const option = document.createElement("option");
-      option.value = i;
-      option.textContent = `${voz.name} (${voz.lang})`;
-      select.appendChild(option);
-    });
+      vocesFiltradas.forEach((voz, i) => {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = `${voz.name} (${voz.lang})`;
+        select.appendChild(option);
+      });
 
-    select.onchange = () => {
-      vozSeleccionada = vocesFiltradas[select.selectedIndex];
-      document.getElementById("menuOpciones").style.display = "none";
-    };
-  }
+      select.onchange = () => {
+        vozSeleccionada = vocesFiltradas[select.selectedIndex];
+        document.getElementById("menuOpciones").style.display = "none";
+      };
+    }
 
     function startRecognition() {
       if (recognition && !micActivo) {
@@ -232,22 +253,4 @@
 
       if (reproducirVoz && 'speechSynthesis' in window) {
         const synth = window.speechSynthesis;
-        const utterance = new SpeechSynthesisUtterance(response);
-        utterance.lang = recognition.lang;
-        utterance.rate = velocidad;
-        if (vozSeleccionada) utterance.voice = vozSeleccionada;
 
-        utterance.onend = () => {
-          if (micActivo) recognition.start();
-        };
-
-        synth.speak(utterance);
-      }
-
-      micActivo = false;
-    }
-
-    window.speechSynthesis.onvoiceschanged = cargarVoces;
-  </script>
-</body>
-</html>
