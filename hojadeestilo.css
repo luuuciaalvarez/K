@@ -298,7 +298,10 @@ footer a:hover {
     transform: scale(0.8);
     pointer-events: none;
 }
-
+.fila-derecha {
+  display: flex;
+  justify-content: flex-end;
+}
   
 
 
