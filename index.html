@@ -91,10 +91,6 @@
 
         <button onclick="sendMessage()">📩 Enviar</button>
 
-        <!-- BOTÓN DETENER VOZ -->
-        <button id="btnDetenerVoz" onclick="detenerVoz()" class="boton-detener oculto">🛑 Detener Voz</button>
-      </div>
-
       <!-- Indicador de carga -->
       <div id="loadingDots" class="typing-dots" style="display: none;">
         <span></span><span></span><span></span>
@@ -104,6 +100,7 @@
       <div class="respuesta-cuadro">
         <h3>Respuesta:</h3>
         <p id="responseText" class="response"></p>
+        <button id="btnDetenerVoz" class="boton-detener oculto" onclick="detenerVoz()">⏹ Detener voz</button>
       </div>
 
       <!-- Imágenes inferiores -->
