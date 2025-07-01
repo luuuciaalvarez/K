@@ -220,6 +220,7 @@
       
       select.onchange = () => {
         vozSeleccionada = vocesFiltradas[select.selectedIndex];
+        localStorage.setItem("vozIndex", select.selectedIndex);
         document.getElementById("menuOpciones").style.display = "none";
       };
     }
